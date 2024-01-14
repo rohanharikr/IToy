@@ -1,24 +1,13 @@
-﻿using UnityEditor;
+﻿using Unity.VisualScripting;
+using UnityEditor;
+using UnityEditor.PackageManager.UI;
+using UnityEngine;
 
-[CustomEditor(typeof(DefaultAsset))]
+[CustomEditor(typeof(IToyControl))]
 public class ControlInspector : Editor
 {
     public override void OnInspectorGUI()
     {
-        var path = AssetDatabase.GetAssetPath(target);
-
-        if (path.EndsWith(".control"))
-        {
-            SVGInspectorGUI();
-        }
-        else
-        {
-            base.OnInspectorGUI();
-        }
-    }
-
-    private void SVGInspectorGUI()
-    {
-        EditorGUILayout.LabelField("Wow!!!");
+        base.OnInspectorGUI();
     }
 }

@@ -3,12 +3,6 @@ using System.IO;
 using UnityEngine;
 using UnityEditor;
 
-[Serializable]
-public class Control
-{
-    public string GUID;
-}
-
 public class Context
 {
     [MenuItem("Assets/IToy/Grayscale")]
@@ -17,7 +11,6 @@ public class Context
         string assetGuid = Selection.assetGUIDs[0];
         string assetPath = AssetDatabase.GUIDToAssetPath(assetGuid);
         string assetName = Path.GetFileNameWithoutExtension(assetPath);
-        string assetNameWithExt = Path.GetFileName(assetPath);
         string assetDirPath = Path.GetDirectoryName(assetPath);
 
         //Set Read/Write access for GetPixel OP
@@ -44,16 +37,15 @@ public class Context
         byte[] grayScaleImage = grayscaleImageBuffer.EncodeToPNG();
         File.WriteAllBytes(grayscaleAssetPath, grayScaleImage);
 
-        //Move original file to .tmp - use to reset back to original state in future
-        string tmpAssetPath = Path.Combine(assetDirPath, assetNameWithExt + ".tmp");
-        FileUtil.MoveFileOrDirectory(assetPath, tmpAssetPath);
+        //Create IToyControl S.O.
+        IToyControl control = ScriptableObject.CreateInstance<IToyControl>();
+        control.Original = originalImage;
+        control.Current = grayscaleImageBuffer;
+        AssetDatabase.CreateAsset(control, Path.Combine(assetDirPath, assetName + ".asset"));
+        AssetDatabase.SaveAssets();
 
-        //Create control file
-        Control control = new Control();
-        control.GUID = AssetDatabase.AssetPathToGUID(grayscaleAssetPath); //GUID of IToy-generated image
-        string jsonStr = JsonUtility.ToJson(control);
-        string controlAssetPath = Path.Combine(assetDirPath + "/" + assetName + ".control");
-        File.WriteAllText(controlAssetPath, jsonStr);
+        //Delete original image (we save original image in IToyControl S.O.)
+        FileUtil.DeleteFileOrDirectory(assetPath);
 
         AssetDatabase.Refresh();
     }

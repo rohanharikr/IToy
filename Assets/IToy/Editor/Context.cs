@@ -10,14 +10,14 @@ public class Context
         string assetGuid = Selection.assetGUIDs[0];
         string assetPath = AssetDatabase.GUIDToAssetPath(assetGuid);
         string assetName = Path.GetFileNameWithoutExtension(assetPath);
-        string assetNameWithExt = Path.GetFileName(assetPath);
         string assetDirPath = Path.GetDirectoryName(assetPath);
 
         //Set Read/Write access for GetPixel OP
         Utility.ReadWriteAccess(assetPath, true);
 
         //Grayscale OP
-        Texture2D originalImage = Resources.Load<Texture2D>(assetName);
+        Texture2D originalImage = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath);
+        byte[] originalAsset = originalImage.EncodeToJPG();
         Texture2D grayscaleImageBuffer = new(originalImage.width, originalImage.height);
         for (int i = 0; i < originalImage.width; i++)
             for (int j = 0; j < originalImage.height; j++)
@@ -32,29 +32,23 @@ public class Context
         //OP done - Unset Read/Write access
         Utility.ReadWriteAccess(assetPath, false);
 
-        //Move original file to temp (for restore option)
-        string tmpAssetsDir = Path.Combine(assetDirPath, ".IToy");
-        string tmpAssetPath = Path.Combine(tmpAssetsDir, assetNameWithExt);
-        if(!Directory.Exists(tmpAssetsDir))
-        {
-            Directory.CreateDirectory(tmpAssetsDir);
-        }
-        FileUtil.MoveFileOrDirectory(assetPath, tmpAssetPath);
-        Texture2D tmpAsset = Resources.Load<Texture2D>(tmpAssetPath);
-
+        //Delete original image (we save this in IToyControl SO)
+        FileUtil.DeleteFileOrDirectory(assetPath);
+        
         //Write grayscale to .png file
         string grayscaleAssetPath = Path.Combine(assetDirPath, assetName + ".png");
-        byte[] grayScaleImage = grayscaleImageBuffer.EncodeToPNG();
-        File.WriteAllBytes(grayscaleAssetPath, grayScaleImage);
-
+        byte[] grayscaleImage = grayscaleImageBuffer.EncodeToPNG();
+        File.WriteAllBytes(grayscaleAssetPath, grayscaleImage);
+        AssetDatabase.Refresh();
+        Texture2D currentAsset = AssetDatabase.LoadAssetAtPath<Texture2D>(grayscaleAssetPath);
+        
         //Create IToyControl SO
         IToyControl control = ScriptableObject.CreateInstance<IToyControl>();
-        control.Original = tmpAsset;
-        control.Current = grayscaleImageBuffer;
+        control.Original = originalAsset;
+        control.Current = currentAsset;
         AssetDatabase.CreateAsset(control, Path.Combine(assetDirPath, assetName + ".asset"));
         AssetDatabase.SaveAssets();
 
-        AssetDatabase.Refresh();
     }
 }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using UnityEngine;
 using UnityEditor;
 
@@ -11,6 +10,7 @@ public class Context
         string assetGuid = Selection.assetGUIDs[0];
         string assetPath = AssetDatabase.GUIDToAssetPath(assetGuid);
         string assetName = Path.GetFileNameWithoutExtension(assetPath);
+        string assetNameWithExt = Path.GetFileName(assetPath);
         string assetDirPath = Path.GetDirectoryName(assetPath);
 
         //Set Read/Write access for GetPixel OP
@@ -32,20 +32,27 @@ public class Context
         //OP done - Unset Read/Write access
         Utility.ReadWriteAccess(assetPath, false);
 
+        //Move original file to temp (for restore option)
+        string tmpAssetsDir = Path.Combine(assetDirPath, ".IToy");
+        string tmpAssetPath = Path.Combine(tmpAssetsDir, assetNameWithExt);
+        if(!Directory.Exists(tmpAssetsDir))
+        {
+            Directory.CreateDirectory(tmpAssetsDir);
+        }
+        FileUtil.MoveFileOrDirectory(assetPath, tmpAssetPath);
+        Texture2D tmpAsset = Resources.Load<Texture2D>(tmpAssetPath);
+
         //Write grayscale to .png file
         string grayscaleAssetPath = Path.Combine(assetDirPath, assetName + ".png");
         byte[] grayScaleImage = grayscaleImageBuffer.EncodeToPNG();
         File.WriteAllBytes(grayscaleAssetPath, grayScaleImage);
 
-        //Create IToyControl S.O.
+        //Create IToyControl SO
         IToyControl control = ScriptableObject.CreateInstance<IToyControl>();
-        control.Original = originalImage;
+        control.Original = tmpAsset;
         control.Current = grayscaleImageBuffer;
         AssetDatabase.CreateAsset(control, Path.Combine(assetDirPath, assetName + ".asset"));
         AssetDatabase.SaveAssets();
-
-        //Delete original image (we save original image in IToyControl S.O.)
-        FileUtil.DeleteFileOrDirectory(assetPath);
 
         AssetDatabase.Refresh();
     }

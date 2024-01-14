@@ -33,7 +33,7 @@ public class Context
         Utility.ReadWriteAccess(assetPath, false);
 
         //Delete original image (we save this in IToyControl SO)
-        FileUtil.DeleteFileOrDirectory(assetPath);
+        AssetDatabase.DeleteAsset(assetPath);
         
         //Write grayscale to .png file
         string grayscaleAssetPath = Path.Combine(assetDirPath, assetName + ".png");

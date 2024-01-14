@@ -1,4 +1,5 @@
 ﻿using UnityEditor;
+using UnityEngine;
 
 public class Utility
 {
@@ -10,6 +11,7 @@ public class Utility
         else
             ti.isReadable = true;
         
+        ti.hideFlags = HideFlags.HideInInspector;
         ti.SaveAndReimport();
     }
 }

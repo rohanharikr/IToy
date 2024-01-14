@@ -44,10 +44,18 @@ public class Context
         byte[] grayScaleImage = grayscaleImageBuffer.EncodeToPNG();
         File.WriteAllBytes(grayscaleAssetPath, grayScaleImage);
 
-        //Move original file to tmp - use to reset back to original state in future
-        string tmpAssetPath = Path.Combine(assetDirPath + "/" + assetNameWithExt + ".tmp");
+        //Move original file to .tmp - use to reset back to original state in future
+        string tmpAssetPath = Path.Combine(assetDirPath, assetNameWithExt + ".tmp");
         FileUtil.MoveFileOrDirectory(assetPath, tmpAssetPath);
+
+        //Create control file
+        Control control = new Control();
+        control.GUID = AssetDatabase.AssetPathToGUID(grayscaleAssetPath); //GUID of IToy-generated image
+        string jsonStr = JsonUtility.ToJson(control);
+        string controlAssetPath = Path.Combine(assetDirPath + "/" + assetName + ".control");
+        File.WriteAllText(controlAssetPath, jsonStr);
 
         AssetDatabase.Refresh();
     }
 }
+

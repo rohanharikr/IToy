@@ -17,11 +17,15 @@ public class ControlInspector : Editor
     Texture2D original;
     Texture2D current;
 
+    public Material flipHorizontalMaterial;
+
     private void OnEnable()
     {
         control = (IToyControl)target;
         logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Data/logo.png");
         current = control.Current;
+        Shader shader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/FlipHorizontal.shader");
+        flipHorizontalMaterial = new Material(shader);
 
         // Create a texture. Texture size does not matter, since
         // LoadImage will replace with the size of the incoming image.
@@ -80,30 +84,39 @@ public class ControlInspector : Editor
 
         if (serializedObject.ApplyModifiedProperties())
         {
-            Recompute();
+            Texture2D flippedTexture = ApplyShader(current, flipHorizontalMaterial);
+            byte[] file = flippedTexture.EncodeToPNG();
+            File.WriteAllBytes("Assets/Resources/cat.png", file);
+            AssetDatabase.Refresh();
         }
     }
 
-    void Recompute()
+    Texture2D ApplyShader(Texture2D inputTexture, Material shaderMaterial)
     {
-        //Grayscale OP
-        Texture2D grayscaleImageBuffer = new(original.width, original.height);
-        Color32[] colors = original.GetPixels32();
-        for (int i = 0; i < original.width; i++)
-            for (int j = 0; j < original.height; j++)
-            {
-                Color pixel = original.GetPixel(i, j);
-                float grayScalePixel = pixel.grayscale;
-                Color pixelColor = new(grayScalePixel, grayScalePixel, grayScalePixel);
-                grayscaleImageBuffer.SetPixel(i, j, pixelColor);
-            }
-        grayscaleImageBuffer.SetPixels32(colors);
-        grayscaleImageBuffer.Apply();
+        // Create a temporary RenderTexture
+        RenderTexture rt = RenderTexture.GetTemporary(inputTexture.width, inputTexture.height, 0, RenderTextureFormat.Default, RenderTextureReadWrite.Default);
 
-        string grayscaleAssetPath = AssetDatabase.GetAssetPath(control.Current);
-        byte[] grayscaleImage = grayscaleImageBuffer.EncodeToPNG();
-        File.WriteAllBytes(grayscaleAssetPath, grayscaleImage);
-        AssetDatabase.Refresh();
+        // Create a temporary Texture2D
+        Texture2D outputTexture = new Texture2D(inputTexture.width, inputTexture.height);
+
+        // Set the RenderTexture as the active render target
+        Graphics.SetRenderTarget(rt);
+
+        // Clear the render target
+        GL.Clear(true, true, Color.clear);
+
+        // Set the material with the shader
+        Graphics.Blit(inputTexture, rt, shaderMaterial);
+
+        // Read the RenderTexture data into the Texture2D
+        RenderTexture.active = rt;
+        outputTexture.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+
+        // Release the temporary objects
+        RenderTexture.ReleaseTemporary(rt);
+        RenderTexture.active = null;
+
+        return outputTexture;
     }
 
     void SelfDestruct(IToyControl control)

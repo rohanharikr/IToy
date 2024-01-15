@@ -1,83 +1,58 @@
-﻿using NUnit.Framework;
-using System.IO;
+﻿using System.IO;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 [CustomEditor(typeof(IToyControl))]
+[CanEditMultipleObjects]
 public class ControlInspector : Editor
 {
-    bool IsBgRemovalExpanded = true;
-    bool IsCropExpanded = true;
-    bool IsTransformExpanded = true;
-    bool IsCorrectionExpanded = true;
-    bool IsAdvancedExpanded = false;
+    #region Expandables
+    bool _isBgRemovalExpanded = true;
+    bool _isTransformExpanded = true;
+    bool _isCorrectionExpanded = true;
+    bool _isAdvancedExpanded = false;
+    #endregion
 
     public override void OnInspectorGUI()
     {
+        serializedObject.Update();
+
         IToyControl control = (IToyControl)target;
-            
+
         Texture2D logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Data/logo.png");
 
         GUILayout.Label(logo, GUILayout.Width(120), GUILayout.Height(60));
-        using (new EditorGUILayout.VerticalScope())
-        {
-            EditorGUILayout.LabelField("2023.02.9");
-            EditorGUILayout.LinkButton("Source on GitHub");
-        }
 
-        // Create a texture. Texture size does not matter, since
+        // Texture size does not matter, since
         // LoadImage will replace with the size of the incoming image.
-        Texture2D imageOne = new Texture2D(0, 0);
-
+        Texture2D original = new Texture2D(0, 0);
+        Texture2D current = control.Current;
         using (new EditorGUILayout.HorizontalScope())
         {
-            ImageConversion.LoadImage(imageOne, control.Original);
-            GUILayout.Box(imageOne, GUILayout.Width(212), GUILayout.Height(212));
-            Texture2D imageTwo = control.Current;
-            GUILayout.Box(imageTwo, GUILayout.Width(212), GUILayout.Height(212));
+            ImageConversion.LoadImage(original, control.Original);
+            GUILayout.Box(original, GUILayout.Width(212), GUILayout.Height(212));
+            GUILayout.Box(current, GUILayout.Width(212), GUILayout.Height(212));
         }
 
-        IsBgRemovalExpanded = EditorGUILayout.BeginFoldoutHeaderGroup(IsBgRemovalExpanded, "Remove background");
-            if (IsBgRemovalExpanded)
-            {
-                EditorGUILayout.ToggleLeft("White", false);
-                EditorGUILayout.ToggleLeft("Black", false);
-                using (new EditorGUILayout.HorizontalScope())
-                {
-                    EditorGUILayout.ToggleLeft("Custom", false);
-                    EditorGUILayout.ColorField(Color.white);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("RemoveBackground"));
+        if (serializedObject.FindProperty("RemoveBackground").intValue == 0)
+            EditorGUILayout.ColorField(" ", Color.white);
 
-                }
-            }
+        EditorGUILayout.Separator();
+
+        _isTransformExpanded = EditorGUILayout.BeginFoldoutHeaderGroup(_isTransformExpanded, "Transform");
+        if (_isTransformExpanded)
+        {
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("Crop"));
+            EditorGUILayout.Toggle("Flip horizontal", false);
+            EditorGUILayout.Toggle("Flip vertical", false);
+        }
         EditorGUILayout.EndFoldoutHeaderGroup();
 
         EditorGUILayout.Separator();
 
-        IsCropExpanded = EditorGUILayout.BeginFoldoutHeaderGroup(IsCropExpanded, "Crop");
-            if (IsCropExpanded)
-            {
-                EditorGUILayout.TextField("Left", "0", GUILayout.ExpandWidth(false));
-                EditorGUILayout.TextField("Right", "0", GUILayout.ExpandWidth(false));
-                EditorGUILayout.TextField("Top", "0", GUILayout.ExpandWidth(false));
-                EditorGUILayout.TextField("Bottom", "0", GUILayout.ExpandWidth(false));
-            }
-        EditorGUILayout.EndFoldoutHeaderGroup();
-
-        EditorGUILayout.Separator();
-
-        IsTransformExpanded = EditorGUILayout.BeginFoldoutHeaderGroup(IsTransformExpanded, "Transform");
-            if (IsTransformExpanded)
-            {
-                EditorGUILayout.ToggleLeft("Flip horizontal", false);
-                EditorGUILayout.ToggleLeft("Flip vertical", false);
-            }
-        EditorGUILayout.EndFoldoutHeaderGroup();
-
-        EditorGUILayout.Separator();
-
-        IsCorrectionExpanded = EditorGUILayout.BeginFoldoutHeaderGroup(IsCorrectionExpanded, "Correction");
-            if(IsCorrectionExpanded)
+        _isCorrectionExpanded = EditorGUILayout.BeginFoldoutHeaderGroup(_isCorrectionExpanded, "Correction");
+            if(_isCorrectionExpanded)
             {
                 EditorGUILayout.Slider("Brightness", 0f, 0f, 100f);
                 EditorGUILayout.Slider("Contrast", 0f, 0f, 100f);
@@ -88,8 +63,10 @@ public class ControlInspector : Editor
 
         EditorGUILayout.Separator();
 
-        IsAdvancedExpanded = EditorGUILayout.BeginFoldoutHeaderGroup(IsAdvancedExpanded, "Advanced");
-            if (IsAdvancedExpanded)
+        _isAdvancedExpanded = EditorGUILayout.BeginFoldoutHeaderGroup(_isAdvancedExpanded, "Advanced");
+        if (_isAdvancedExpanded)
+        {
+            using (new GUILayout.HorizontalScope())
             {
                 GUILayout.Button("Reset", GUILayout.ExpandWidth(false));
                 if (GUILayout.Button("Self Destruct", GUILayout.ExpandWidth(false)))
@@ -103,17 +80,7 @@ public class ControlInspector : Editor
                     AssetDatabase.Refresh();
                 };
             }
-        EditorGUILayout.EndFoldoutHeaderGroup();
-
-        EditorGUILayout.Separator();
-
-        using (new GUILayout.HorizontalScope())
-        {
-            using (new GUILayout.HorizontalScope())
-            {
-                GUILayout.Button("Apply changes", GUILayout.ExpandWidth(false));
-                GUILayout.Button("Discard changes", GUILayout.ExpandWidth(false));
-            }
         }
+        EditorGUILayout.EndFoldoutHeaderGroup();
     }
 }

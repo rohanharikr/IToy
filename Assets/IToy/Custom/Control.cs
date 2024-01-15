@@ -21,4 +21,21 @@ public class IToyControl : ScriptableObject
      */
     [SerializeReference]
     public Texture2D Current;
+
+    [SerializeField]
+    public bool FlipHorizontal = false;
+
+    [SerializeField]    
+    public bool FlipVertical = false;
+
+    [SerializeField]
+    public Rect Crop;
+
+    public enum RemoveBackgroundOpts
+    {
+        None, White, Black, Custom
+    }
+    
+    [SerializeField]
+    public RemoveBackgroundOpts RemoveBackground;
 }

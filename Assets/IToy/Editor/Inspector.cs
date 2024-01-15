@@ -51,8 +51,8 @@ public class ControlInspector : Editor
         _isTransformExpanded = EditorGUILayout.BeginFoldoutHeaderGroup(_isTransformExpanded, "Transform");
         if (_isTransformExpanded)
         {
-            bool isFlipHorizontal = EditorGUILayout.PropertyField(serializedObject.FindProperty("FlipHorizontal"));
-            EditorGUILayout.Toggle("Flip vertical", false);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("FlipHorizontal"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("FlipVertical"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("Crop"));
         }
         EditorGUILayout.EndFoldoutHeaderGroup();

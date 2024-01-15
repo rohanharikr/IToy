@@ -11,10 +11,20 @@ public class ControlInspector : Editor
     bool IsCropExpanded = true;
     bool IsTransformExpanded = true;
     bool IsCorrectionExpanded = true;
+    bool IsAdvancedExpanded = false;
 
     public override void OnInspectorGUI()
     {
         IToyControl control = (IToyControl)target;
+            
+        Texture2D logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Data/logo.png");
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            GUILayout.Label(logo, GUILayout.Width(120), GUILayout.Height(60));
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.LabelField("Source on GitHub", GUILayout.ExpandHeight(true));
+        }
 
         // Create a texture. Texture size does not matter, since
         // LoadImage will replace with the size of the incoming image.
@@ -47,10 +57,10 @@ public class ControlInspector : Editor
         IsCropExpanded = EditorGUILayout.BeginFoldoutHeaderGroup(IsCropExpanded, "Crop");
             if (IsCropExpanded)
             {
-                EditorGUILayout.TextField("Left", "", GUILayout.ExpandWidth(false));
-                EditorGUILayout.TextField("Right", "", GUILayout.ExpandWidth(false));
-                EditorGUILayout.TextField("Top", "", GUILayout.ExpandWidth(false));
-                EditorGUILayout.TextField("Bottom", "", GUILayout.ExpandWidth(false));
+                EditorGUILayout.TextField("Left", "0", GUILayout.ExpandWidth(false));
+                EditorGUILayout.TextField("Right", "0", GUILayout.ExpandWidth(false));
+                EditorGUILayout.TextField("Top", "0", GUILayout.ExpandWidth(false));
+                EditorGUILayout.TextField("Bottom", "0", GUILayout.ExpandWidth(false));
             }
         EditorGUILayout.EndFoldoutHeaderGroup();
 
@@ -69,31 +79,41 @@ public class ControlInspector : Editor
         IsCorrectionExpanded = EditorGUILayout.BeginFoldoutHeaderGroup(IsCorrectionExpanded, "Correction");
             if(IsCorrectionExpanded)
             {
-                EditorGUILayout.ColorField("Remove", Color.gray);
-                EditorGUILayout.Slider("Brightness", 50f, 0f, 100f);
-                EditorGUILayout.Slider("Contrast", 50f, 0f, 100f);
-                EditorGUILayout.Slider("Saturation", 50f, 0f, 100f);
+                EditorGUILayout.Slider("Brightness", 0f, 0f, 100f);
+                EditorGUILayout.Slider("Contrast", 0f, 0f, 100f);
+                EditorGUILayout.Slider("Hue", 0f, 0f, 100f);
+                EditorGUILayout.Slider("Saturation", 0f, 0f, 100f);
             }
         EditorGUILayout.EndFoldoutHeaderGroup();
 
-        //If anyone has a better idea im all ears
-        GUILayout.Label("_________________________________________________________________________________________________________________________________________________________________________");
+        EditorGUILayout.Separator();
+
+        IsAdvancedExpanded = EditorGUILayout.BeginFoldoutHeaderGroup(IsAdvancedExpanded, "Advanced");
+            if (IsAdvancedExpanded)
+            {
+                GUILayout.Button("Reset", GUILayout.ExpandWidth(false));
+                if (GUILayout.Button("Self Destruct", GUILayout.ExpandWidth(false)))
+                {
+                    string currentAssetPath = AssetDatabase.GetAssetPath(control.Current);
+                    string currentAssetDirPath = Path.GetDirectoryName(currentAssetPath);
+                    AssetDatabase.DeleteAsset(currentAssetPath);
+                    File.WriteAllBytes(Path.Combine(currentAssetDirPath, "cat.png"), control.Original);
+                    string controlPath = AssetDatabase.GetAssetPath(control);
+                    AssetDatabase.DeleteAsset(controlPath);
+                    AssetDatabase.Refresh();
+                };
+            }
+        EditorGUILayout.EndFoldoutHeaderGroup();
+
         EditorGUILayout.Separator();
 
         using (new GUILayout.HorizontalScope())
         {
-            GUILayout.Button("Save changes", GUILayout.ExpandWidth(false));
-            GUILayout.Button("Reset", GUILayout.ExpandWidth(false));
-            if(GUILayout.Button("Self Destruct", GUILayout.ExpandWidth(false)))
+            using (new GUILayout.HorizontalScope())
             {
-                string currentAssetPath = AssetDatabase.GetAssetPath(control.Current);
-                string currentAssetDirPath = Path.GetDirectoryName(currentAssetPath);
-                AssetDatabase.DeleteAsset(currentAssetPath);
-                File.WriteAllBytes(Path.Combine(currentAssetDirPath, "cat.png"), control.Original);
-                string controlPath = AssetDatabase.GetAssetPath(control);
-                AssetDatabase.DeleteAsset(controlPath);
-                AssetDatabase.Refresh();
-            };
+                GUILayout.Button("Apply changes", GUILayout.ExpandWidth(false));
+                GUILayout.Button("Discard changes", GUILayout.ExpandWidth(false));
+            }
         }
     }
 }

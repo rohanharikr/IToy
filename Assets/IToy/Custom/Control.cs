@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class IToyControl : ScriptableObject
 {
@@ -8,7 +9,6 @@ public class IToyControl : ScriptableObject
      * We do not want the original file i.e. temporary file to show up in the editor.
      * We could hide the file (using special char/reserved) but then Unity would not see it for us to reference.
      */
-    [SerializeField]
     public byte[] Original;
 
     /*
@@ -22,24 +22,25 @@ public class IToyControl : ScriptableObject
     [SerializeReference]
     public Texture2D Current;
 
-    [SerializeField]
-    public bool FlipHorizontal;
-    
-    [SerializeField]    
-    public bool FlipVertical = false;
-
-    [SerializeField]
-    public Rect Crop;
-
     public enum RemoveBackgroundOpts
     {
         None, White, Black, Custom
     }
 
-    [SerializeField]
     public RemoveBackgroundOpts RemoveBackground;
 
-    [SerializeField]
     [Range(-100, 100)]
-    public int Saturation; 
+    public int Saturation;
+
+    public TransformI Transform;
+}
+
+[Serializable]
+public class TransformI
+{
+    public bool FlipHorizontal = false;
+
+    public bool FlipVertical = false;
+
+    public Rect Crop;
 }

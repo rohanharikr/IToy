@@ -7,7 +7,6 @@ using UnityEngine;
 public class ControlInspector : Editor
 {
     #region Expandables
-    bool _isTransformExpanded = true;
     bool _isCorrectionExpanded = true;
     bool _isAdvancedExpanded = false;
     #endregion
@@ -46,18 +45,11 @@ public class ControlInspector : Editor
         if (serializedObject.FindProperty("RemoveBackground").intValue == 3)
             EditorGUILayout.ColorField(" ", Color.white);
 
-        EditorGUILayout.Separator();
+            EditorGUILayout.Separator();
 
-        _isTransformExpanded = EditorGUILayout.BeginFoldoutHeaderGroup(_isTransformExpanded, "Transform");
-        if (_isTransformExpanded)
-        {
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("FlipHorizontal"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("FlipVertical"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("Crop"));
-        }
-        EditorGUILayout.EndFoldoutHeaderGroup();
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("Transform"));
 
-        EditorGUILayout.Separator();
+            EditorGUILayout.Separator();
 
         _isCorrectionExpanded = EditorGUILayout.BeginFoldoutHeaderGroup(_isCorrectionExpanded, "Correction");
         if(_isCorrectionExpanded)

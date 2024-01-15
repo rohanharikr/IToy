@@ -5,7 +5,7 @@ using System;
 
 public class Context
 {
-    [MenuItem("Assets/IToy/Flip horizontal")]
+    [MenuItem("Assets/IToy/Flip Horizontal")]
     public static void FlipHorizontal()
     {
         string assetGuid = Selection.assetGUIDs[0];
@@ -46,12 +46,13 @@ public class Context
         IToyControl control = ScriptableObject.CreateInstance<IToyControl>();
         control.Original = originalAsset;
         control.Current = currentAsset;
-        control.FlipHorizontal = true;
+        control.Transform = new TransformI();
+        control.Transform.FlipHorizontal = true;
         AssetDatabase.CreateAsset(control, Path.Combine(assetDirPath, assetName + ".asset"));
         AssetDatabase.SaveAssets();
     }
 
-    [MenuItem("Assets/IToy/Flip vertical")]
+    [MenuItem("Assets/IToy/Flip Vertical")]
     public static void FlipVertical()
     {
         string assetGuid = Selection.assetGUIDs[0];
@@ -66,9 +67,9 @@ public class Context
         Texture2D originalImage = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath);
         byte[] originalAsset = originalImage.EncodeToJPG();
         Texture2D grayscaleImageBuffer = new(originalImage.width, originalImage.height);
-        Color[] colors = originalImage.GetPixels();
+        Color32[] colors = originalImage.GetPixels32();
         Array.Reverse(colors);
-        grayscaleImageBuffer.SetPixels(colors);
+        grayscaleImageBuffer.SetPixels32(colors);
         grayscaleImageBuffer.Apply();
 
         //OP done - Unset Read/Write access
@@ -88,7 +89,8 @@ public class Context
         IToyControl control = ScriptableObject.CreateInstance<IToyControl>();
         control.Original = originalAsset;
         control.Current = currentAsset;
-        control.FlipVertical = true;
+        control.Transform = new TransformI();
+        control.Transform.FlipVertical = true;
         AssetDatabase.CreateAsset(control, Path.Combine(assetDirPath, assetName + ".asset"));
         AssetDatabase.SaveAssets();
     }

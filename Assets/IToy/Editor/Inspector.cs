@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(IToyControl))]
+[CanEditMultipleObjects]
 public class ControlInspector : Editor
 {
     #region Expandables
@@ -77,7 +78,32 @@ public class ControlInspector : Editor
         }
         EditorGUILayout.EndFoldoutHeaderGroup();
 
-        serializedObject.ApplyModifiedProperties();
+        if (serializedObject.ApplyModifiedProperties())
+        {
+            Recompute();
+        }
+    }
+
+    void Recompute()
+    {
+        //Grayscale OP
+        Texture2D grayscaleImageBuffer = new(original.width, original.height);
+        Color32[] colors = original.GetPixels32();
+        for (int i = 0; i < original.width; i++)
+            for (int j = 0; j < original.height; j++)
+            {
+                Color pixel = original.GetPixel(i, j);
+                float grayScalePixel = pixel.grayscale;
+                Color pixelColor = new(grayScalePixel, grayScalePixel, grayScalePixel);
+                grayscaleImageBuffer.SetPixel(i, j, pixelColor);
+            }
+        grayscaleImageBuffer.SetPixels32(colors);
+        grayscaleImageBuffer.Apply();
+
+        string grayscaleAssetPath = AssetDatabase.GetAssetPath(control.Current);
+        byte[] grayscaleImage = grayscaleImageBuffer.EncodeToPNG();
+        File.WriteAllBytes(grayscaleAssetPath, grayscaleImage);
+        AssetDatabase.Refresh();
     }
 
     void SelfDestruct(IToyControl control)

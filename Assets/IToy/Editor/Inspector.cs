@@ -19,11 +19,11 @@ public class ControlInspector : Editor
             
         Texture2D logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Data/logo.png");
 
-        using (new EditorGUILayout.HorizontalScope())
+        GUILayout.Label(logo, GUILayout.Width(120), GUILayout.Height(60));
+        using (new EditorGUILayout.VerticalScope())
         {
-            GUILayout.Label(logo, GUILayout.Width(120), GUILayout.Height(60));
-            GUILayout.FlexibleSpace();
-            EditorGUILayout.LabelField("Source on GitHub", GUILayout.ExpandHeight(true));
+            EditorGUILayout.LabelField("2023.02.9");
+            EditorGUILayout.LinkButton("Source on GitHub");
         }
 
         // Create a texture. Texture size does not matter, since

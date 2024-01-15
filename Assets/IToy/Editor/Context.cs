@@ -23,7 +23,7 @@ public class Context
             for (int j = 0; j < originalImage.height; j++)
             {
                 Color pixel = originalImage.GetPixel(i, j);
-                float grayScalePixel = (pixel.r / 3) + (pixel.g / 3) + (pixel.b / 3); //Or use (Unity)pixel.grayscale?
+                float grayScalePixel = pixel.grayscale;
                 Color pixelColor = new(grayScalePixel, grayScalePixel, grayScalePixel);
                 grayscaleImageBuffer.SetPixel(i, j, pixelColor);
             }

@@ -23,8 +23,8 @@ public class IToyControl : ScriptableObject
     public Texture2D Current;
 
     [SerializeField]
-    public bool FlipHorizontal = false;
-
+    public bool FlipHorizontal;
+    
     [SerializeField]    
     public bool FlipVertical = false;
 
@@ -35,7 +35,11 @@ public class IToyControl : ScriptableObject
     {
         None, White, Black, Custom
     }
-    
+
     [SerializeField]
     public RemoveBackgroundOpts RemoveBackground;
+
+    [SerializeField]
+    [Range(-100, 100)]
+    public int Saturation; 
 }

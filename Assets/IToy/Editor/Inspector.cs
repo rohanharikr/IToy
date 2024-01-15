@@ -1,41 +1,49 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(IToyControl))]
-[CanEditMultipleObjects]
 public class ControlInspector : Editor
 {
     #region Expandables
-    bool _isBgRemovalExpanded = true;
     bool _isTransformExpanded = true;
     bool _isCorrectionExpanded = true;
     bool _isAdvancedExpanded = false;
     #endregion
 
+    IToyControl control;
+    Texture2D logo;
+    Texture2D original;
+    Texture2D current;
+
+    private void OnEnable()
+    {
+        control = (IToyControl)target;
+        logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Data/logo.png");
+        current = control.Current;
+
+        // Create a texture. Texture size does not matter, since
+        // LoadImage will replace with the size of the incoming image.
+        original = new Texture2D(0, 0);
+
+        ImageConversion.LoadImage(original, control.Original);
+    }
+
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
 
-        IToyControl control = (IToyControl)target;
-
-        Texture2D logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Data/logo.png");
-
         GUILayout.Label(logo, GUILayout.Width(120), GUILayout.Height(60));
 
-        // Texture size does not matter, since
-        // LoadImage will replace with the size of the incoming image.
-        Texture2D original = new Texture2D(0, 0);
-        Texture2D current = control.Current;
         using (new EditorGUILayout.HorizontalScope())
         {
-            ImageConversion.LoadImage(original, control.Original);
             GUILayout.Box(original, GUILayout.Width(212), GUILayout.Height(212));
             GUILayout.Box(current, GUILayout.Width(212), GUILayout.Height(212));
         }
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("RemoveBackground"));
-        if (serializedObject.FindProperty("RemoveBackground").intValue == 0)
+        if (serializedObject.FindProperty("RemoveBackground").intValue == 3)
             EditorGUILayout.ColorField(" ", Color.white);
 
         EditorGUILayout.Separator();
@@ -43,22 +51,22 @@ public class ControlInspector : Editor
         _isTransformExpanded = EditorGUILayout.BeginFoldoutHeaderGroup(_isTransformExpanded, "Transform");
         if (_isTransformExpanded)
         {
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("Crop"));
-            EditorGUILayout.Toggle("Flip horizontal", false);
+            bool isFlipHorizontal = EditorGUILayout.PropertyField(serializedObject.FindProperty("FlipHorizontal"));
             EditorGUILayout.Toggle("Flip vertical", false);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("Crop"));
         }
         EditorGUILayout.EndFoldoutHeaderGroup();
 
         EditorGUILayout.Separator();
 
         _isCorrectionExpanded = EditorGUILayout.BeginFoldoutHeaderGroup(_isCorrectionExpanded, "Correction");
-            if(_isCorrectionExpanded)
-            {
-                EditorGUILayout.Slider("Brightness", 0f, 0f, 100f);
-                EditorGUILayout.Slider("Contrast", 0f, 0f, 100f);
-                EditorGUILayout.Slider("Hue", 0f, 0f, 100f);
-                EditorGUILayout.Slider("Saturation", 0f, 0f, 100f);
-            }
+        if(_isCorrectionExpanded)
+        {
+            EditorGUILayout.Slider("Brightness", 0f, 0f, 100f);
+            EditorGUILayout.Slider("Contrast", 0f, 0f, 100f);
+            EditorGUILayout.Slider("Hue", 0f, 0f, 100f);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("Saturation"));
+        }
         EditorGUILayout.EndFoldoutHeaderGroup();
 
         EditorGUILayout.Separator();
@@ -71,16 +79,23 @@ public class ControlInspector : Editor
                 GUILayout.Button("Reset", GUILayout.ExpandWidth(false));
                 if (GUILayout.Button("Self Destruct", GUILayout.ExpandWidth(false)))
                 {
-                    string currentAssetPath = AssetDatabase.GetAssetPath(control.Current);
-                    string currentAssetDirPath = Path.GetDirectoryName(currentAssetPath);
-                    AssetDatabase.DeleteAsset(currentAssetPath);
-                    File.WriteAllBytes(Path.Combine(currentAssetDirPath, "cat.png"), control.Original);
-                    string controlPath = AssetDatabase.GetAssetPath(control);
-                    AssetDatabase.DeleteAsset(controlPath);
-                    AssetDatabase.Refresh();
+                    SelfDestruct(control);
                 };
             }
         }
         EditorGUILayout.EndFoldoutHeaderGroup();
+
+        serializedObject.ApplyModifiedProperties();
+    }
+
+    void SelfDestruct(IToyControl control)
+    {
+        string currentAssetPath = AssetDatabase.GetAssetPath(control.Current);
+        string currentAssetDirPath = Path.GetDirectoryName(currentAssetPath);
+        AssetDatabase.DeleteAsset(currentAssetPath);
+        File.WriteAllBytes(Path.Combine(currentAssetDirPath, "cat.png"), control.Original);
+        string controlPath = AssetDatabase.GetAssetPath(control);
+        AssetDatabase.DeleteAsset(controlPath);
+        AssetDatabase.Refresh();
     }
 }

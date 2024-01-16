@@ -58,17 +58,42 @@ namespace IToy
 
             using (new EditorGUILayout.HorizontalScope())
             {
-                GUILayout.Box(original, GUILayout.Width(212), GUILayout.Height(212));
-                GUILayout.Box(preview, GUILayout.Width(212), GUILayout.Height(212));
+                Texture2D transparencyTex = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Data/transparency-bg.jpg");
+                int previewSize = 208;
+                GUI.Box(new Rect(18, 115, previewSize, previewSize), transparencyTex);
+                GUI.Box(new Rect(240, 115, previewSize, previewSize), transparencyTex);
+
+                using (new EditorGUILayout.VerticalScope())
+                {
+                    GUILayout.Label(original, GUILayout.Width(previewSize), GUILayout.Height(previewSize));
+                    EditorGUILayout.LabelField("Original");
+                }
+                using (new EditorGUILayout.VerticalScope())
+                {
+                    GUILayout.Label(preview, GUILayout.Width(previewSize), GUILayout.Height(previewSize));
+
+                    GUIStyle labelStyle = new GUIStyle(EditorStyles.label);
+                    labelStyle.normal.textColor = new Color(242 / 255f, 109 / 255f, 28 / 255f);
+                    EditorGUILayout.LabelField("Preview", labelStyle);
+                }
             }
+
+            EditorGUILayout.Separator();
+            EditorGUILayout.Separator();
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("RemoveBackground"));
             if (serializedObject.FindProperty("RemoveBackground").intValue == (int)RemoveBackgroundOpts.Custom)
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("RemoveBackgroundColor"), new GUIContent(" "));
 
+            EditorGUILayout.Separator();
+
             EditorGUILayout.PropertyField(serializedObject.FindProperty("Transform"));
 
+            EditorGUILayout.Separator();
+
             EditorGUILayout.PropertyField(serializedObject.FindProperty("Correction"));
+
+            EditorGUILayout.Separator();
 
             _isAdvancedExpanded = EditorGUILayout.BeginFoldoutHeaderGroup(_isAdvancedExpanded, "Advanced");
             if (_isAdvancedExpanded)
@@ -84,6 +109,8 @@ namespace IToy
             }
             EditorGUILayout.EndFoldoutHeaderGroup();
 
+            EditorGUILayout.Separator();
+            EditorGUILayout.Separator();
             EditorGUILayout.Separator();
 
             if (GUILayout.Button("Save changes", GUILayout.ExpandWidth(false)))

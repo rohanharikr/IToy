@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace IToy
 {
@@ -17,12 +16,15 @@ namespace IToy
 
         Texture2D preview;
 
+        #region Materials
         Material _flipHorizontalMat;
         Material _flipVerticalMat;
+        Material _cropMat;
         Material _brightnessMat;
         Material _contrastMat;
         Material _hueMat;
         Material _saturationMat;
+        #endregion
 
         private void OnEnable()
         {
@@ -91,12 +93,14 @@ namespace IToy
             #region Init shaders
             Shader flipHorizontalShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Transform/FlipHorizontal.shader");
             Shader flipVerticalShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Transform/FlipVertical.shader");
+            Shader cropShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Transform/Crop.shader");
             Shader brightnessShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Correction/Brightness.shader");
             Shader contrastShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Correction/Contrast.shader");
             Shader hueShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Correction/Hue.shader");
             Shader saturationShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Correction/Saturation.shader");
             _flipHorizontalMat = new Material(flipHorizontalShader);
             _flipVerticalMat = new Material(flipVerticalShader);
+            _cropMat = new Material(cropShader);
             _brightnessMat = new Material(brightnessShader);
             _contrastMat = new Material(contrastShader);
             _hueMat = new Material(hueShader);
@@ -115,7 +119,18 @@ namespace IToy
         void DrawPreview()
         {
             preview = original;
-            if(control.Transform.FlipHorizontal)
+
+            RectInt cropValues = serializedObject.FindProperty("Transform").FindPropertyRelative("Crop").rectIntValue;
+            if (cropValues.x != 0 || cropValues.y != 0 || cropValues.width != 0 || cropValues.height != 0)
+            {
+                _cropMat.SetInt("_Top", (int)cropValues.x);
+                _cropMat.SetInt("_Right", (int)cropValues.y);
+                _cropMat.SetInt("_Bottom", (int)cropValues.width);
+                _cropMat.SetInt("_Left", (int)cropValues.height);
+               preview = Utility.ApplyShader(preview, _cropMat);
+            }
+
+            if (control.Transform.FlipHorizontal)
                 preview = Utility.ApplyShader(preview, _flipHorizontalMat);
             if (control.Transform.FlipVertical)
                 preview = Utility.ApplyShader(preview, _flipVerticalMat);

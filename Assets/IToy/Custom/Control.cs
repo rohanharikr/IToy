@@ -46,7 +46,7 @@ namespace IToy
 
         public bool FlipVertical = false;
 
-        public Rect Crop;
+        public RectInt Crop;
     }
 
     [Serializable]

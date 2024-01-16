@@ -47,8 +47,7 @@ Shader "IToy/Background"
             }
 
             bool isColorToBeRemoved(in fixed4 color) {
-                float threshold = 0.75; // Adjust the threshold as needed
-                // Check if the color is close to _RemoveColor for each channel
+                float threshold = 0.75; // threshold
                 return length(color.rgb - _RemoveColor.rgb) < threshold;
             }
 

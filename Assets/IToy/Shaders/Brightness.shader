@@ -1,9 +1,9 @@
-Shader "IToy/Saturation"
+Shader "IToy/Brightness"
 {
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
-		_Saturation ("Saturation", Range(-100, 100)) = 0
+		_Brightness ("Brightness", Range(-100, 100)) = 0
 	}
 
 	SubShader
@@ -18,7 +18,7 @@ Shader "IToy/Saturation"
 			#include "UnityCG.cginc"
 
 			sampler2D _MainTex;
-			float _Saturation;
+			float _Brightness;
 
 			struct appdata
 			{
@@ -43,8 +43,10 @@ Shader "IToy/Saturation"
 			fixed4 pixel_shader(v2f i) : COLOR
 			{
 				fixed4 col = tex2D(_MainTex, i.uv);
-				float gray = dot(col.rgb, float3(0.3, 0.59, 0.11));
-				col.rgb = lerp(gray, col.rgb, (_Saturation + 100.0) / 100.0);
+
+				// Adjust brightness
+				col.rgb += _Brightness / 100.0;
+
 				return col;
 			}
 

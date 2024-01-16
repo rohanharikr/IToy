@@ -20,6 +20,7 @@ namespace IToy
         Material _flipHorizontalMat;
         Material _flipVerticalMat;
         Material _saturationMat;
+        Material _brightnessMat;
 
         private void OnEnable()
         {
@@ -88,9 +89,11 @@ namespace IToy
             #region Init shaders
             Shader flipHorizontalShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/FlipHorizontal.shader");
             Shader flipVerticalShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/FlipVertical.shader");
+            Shader brightnessShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Brightness.shader");
             Shader saturationShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Saturation.shader");
             _flipHorizontalMat = new Material(flipHorizontalShader);
             _flipVerticalMat = new Material(flipVerticalShader);
+            _brightnessMat = new Material(brightnessShader);
             _saturationMat = new Material(saturationShader);
             #endregion
 
@@ -111,17 +114,22 @@ namespace IToy
             if (control.Transform.FlipVertical)
                 preview = Utility.ApplyShader(preview, _flipVerticalMat);
 
-            int saturationLevel = serializedObject.FindProperty("Correction").FindPropertyRelative("Saturation").intValue;
-            if(saturationLevel != 0)
+            int brightnessLevel = serializedObject.FindProperty("Correction").FindPropertyRelative("Brightness").intValue;
+            if(brightnessLevel != 0)
             {
-                _cropMat.SetInt("_Saturation", saturationLevel);
-                preview = Utility.ApplyShader(preview, _cropMat);
+                _brightnessMat.SetInt("_Brightness", brightnessLevel);
+                preview = Utility.ApplyShader(preview, _brightnessMat);
             }
 
-            //byte[] file = preview.EncodeToPNG();
-            //File.WriteAllBytes("Assets/Resources/cat.png", file);
-            //AssetDatabase.Refresh();
-            _cropMat.RevertAllPropertyOverrides();
+            int saturationLevel = serializedObject.FindProperty("Correction").FindPropertyRelative("Saturation").intValue;
+            if (saturationLevel != 0)
+            {
+                _saturationMat.SetInt("_Saturation", saturationLevel);
+                preview = Utility.ApplyShader(preview, _saturationMat);
+            }
+
+            _brightnessMat.RevertAllPropertyOverrides();
+            _saturationMat.RevertAllPropertyOverrides();
         }
 
         void SelfDestruct(IToyControl control)

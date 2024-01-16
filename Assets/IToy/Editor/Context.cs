@@ -2,18 +2,12 @@
 using UnityEngine;
 using UnityEditor;
 using System;
-using UnityEditor.PackageManager.UI;
+using Codice.Client.Common;
 
 namespace IToy
 {
     public class Context
     {
-        [MenuItem("Assets/IToy/Flip Horizontal", true)]
-        static bool ValidateFlipHorizontal()
-        {
-            //TBD
-            return true;
-        }
 
         [MenuItem("Assets/IToy/Flip Horizontal")]
         static void FlipHorizontal()
@@ -64,6 +58,8 @@ namespace IToy
             EditorUtility.FocusProjectWindow();
             Selection.activeObject = toy;
         }
+        [MenuItem("Assets/IToy/Flip Horizontal", true)]
+        static bool ValidateFlipHorizontal() =>  Utility.IsSupportedFileType(Selection.activeObject);
 
         [MenuItem("Assets/IToy/Flip Vertical")]
         static void FlipVertical()
@@ -107,6 +103,8 @@ namespace IToy
             AssetDatabase.CreateAsset(toy, Path.Combine(assetDirPath, assetName + ".asset"));
             AssetDatabase.SaveAssets();
         }
+        [MenuItem("Assets/IToy/Flip Vertical", true)]
+        static bool ValidateFlipVertical() => Utility.IsSupportedFileType(Selection.activeObject);
 
         [MenuItem("Assets/IToy/Grayscale")]
         static void Grayscale()
@@ -155,6 +153,8 @@ namespace IToy
             AssetDatabase.CreateAsset(toy, Path.Combine(assetDirPath, assetName + ".asset"));
             AssetDatabase.SaveAssets();
         }
+        [MenuItem("Assets/IToy/Grayscale", true)]
+        static bool ValidateGrayscale() => Utility.IsSupportedFileType(Selection.activeObject);
     }
 }
 

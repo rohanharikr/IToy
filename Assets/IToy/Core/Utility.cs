@@ -23,5 +23,10 @@ namespace IToy
             res.Apply();
             return res;
         }
+
+        public static bool IsSupportedFileType(Object selection)
+        {
+            return selection != null && selection is Texture2D;
+        }
     }
 }

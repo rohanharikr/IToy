@@ -17,7 +17,7 @@ MonoBehaviour:
   RemoveBackground: 0
   Saturation: 0
   Transform:
-    FlipHorizontal: 1
+    FlipHorizontal: 0
     FlipVertical: 0
     Crop:
       serializedVersion: 2
@@ -29,4 +29,4 @@ MonoBehaviour:
     Brightness: 0
     Contrast: 0
     Hue: 0
-    Saturation: 0
+    Saturation: -100

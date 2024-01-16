@@ -139,6 +139,8 @@ namespace IToy
             IToyControl control = ScriptableObject.CreateInstance<IToyControl>();
             control.Original = originalAsset;
             control.Current = currentAsset;
+            control.Correction = new IToy.Correction();
+            control.Correction.Saturation = -100;
             AssetDatabase.CreateAsset(control, Path.Combine(assetDirPath, assetName + ".asset"));
             AssetDatabase.SaveAssets();
         }

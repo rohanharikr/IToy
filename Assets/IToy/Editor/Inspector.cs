@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace IToy
 {
@@ -16,22 +17,13 @@ namespace IToy
 
         Texture2D preview;
 
-        public Material flipHorizontalMaterial;
+        Material _flipHorizontalMat;
+        Material _flipVerticalMat;
+        Material _cropMat;
 
         private void OnEnable()
         {
-            control = (IToyControl)target;
-            logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Data/logo.png");
-            Shader shader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/FlipHorizontal.shader");
-            flipHorizontalMaterial = new Material(shader);
-
-            // Create a texture. Texture size does not matter, since
-            // LoadImage will replace with the size of the incoming image.
-            original = new Texture2D(0, 0);
-
-            ImageConversion.LoadImage(original, control.Original);
-
-            preview = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Resources/cat.png");
+            Init();
         }
 
         private void OnDisable()
@@ -84,28 +76,52 @@ namespace IToy
 
             if (serializedObject.ApplyModifiedProperties())
             {
-                RedrawPreview();
+                DrawPreview();
             }
         }
 
-        void RedrawPreview()
+        void Init()
+        {
+            control = (IToyControl)target;
+            logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Data/logo.png");
+
+            #region Init shaders
+            Shader flipHorizontalShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/FlipHorizontal.shader");
+            Shader flipVerticalShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/FlipVertical.shader");
+            Shader cropShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Crop.shader");
+            _flipHorizontalMat = new Material(flipHorizontalShader);
+            _flipVerticalMat = new Material(flipVerticalShader);
+            _cropMat = new Material(cropShader);
+            #endregion
+
+            // Create a texture. Texture size does not matter, since
+            // LoadImage will replace with the size of the incoming image.
+            original = new Texture2D(0, 0);
+
+            ImageConversion.LoadImage(original, control.Original);
+
+            DrawPreview();
+        }
+
+        void DrawPreview()
         {
             preview = original;
             if(control.Transform.FlipHorizontal)
-            {
-                preview = ApplyShader(preview, flipHorizontalMaterial);
-            }
-        }
+                preview = Utility.ApplyShader(preview, _flipHorizontalMat);
+            if (control.Transform.FlipVertical)
+                preview = Utility.ApplyShader(preview, _flipVerticalMat);
 
-        Texture2D ApplyShader(Texture2D inputTexture, Material shaderMaterial)
-        {
-            Texture2D res = new Texture2D(inputTexture.width, inputTexture.height);
-            RenderTexture rt = RenderTexture.GetTemporary(inputTexture.width, inputTexture.height);
-            Graphics.Blit(inputTexture, rt, shaderMaterial);
-            RenderTexture.active = rt;
-            res.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
-            res.Apply();
-            return res;
+            int saturationLevel = serializedObject.FindProperty("Correction").FindPropertyRelative("Saturation").intValue;
+            if(saturationLevel != 0)
+            {
+                _cropMat.SetInt("_Saturation", saturationLevel);
+                preview = Utility.ApplyShader(preview, _cropMat);
+            }
+
+            //byte[] file = preview.EncodeToPNG();
+            //File.WriteAllBytes("Assets/Resources/cat.png", file);
+            //AssetDatabase.Refresh();
+            _cropMat.RevertAllPropertyOverrides();
         }
 
         void SelfDestruct(IToyControl control)

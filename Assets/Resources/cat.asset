@@ -27,6 +27,6 @@ MonoBehaviour:
       height: 0
   Correction:
     Brightness: 0
-    Contrast: 0
+    Contrast: 4
     Hue: 0
     Saturation: 0

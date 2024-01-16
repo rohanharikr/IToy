@@ -21,6 +21,7 @@ namespace IToy
         Material _flipVerticalMat;
         Material _brightnessMat;
         Material _contrastMat;
+        Material _hueMat;
         Material _saturationMat;
 
         private void OnEnable()
@@ -92,11 +93,13 @@ namespace IToy
             Shader flipVerticalShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/FlipVertical.shader");
             Shader brightnessShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Brightness.shader");
             Shader contrastShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Contrast.shader");
+            Shader hueShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Hue.shader");
             Shader saturationShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Saturation.shader");
             _flipHorizontalMat = new Material(flipHorizontalShader);
             _flipVerticalMat = new Material(flipVerticalShader);
             _brightnessMat = new Material(brightnessShader);
             _contrastMat = new Material(contrastShader);
+            _hueMat = new Material(hueShader);
             _saturationMat = new Material(saturationShader);
             #endregion
 
@@ -129,6 +132,13 @@ namespace IToy
             {
                 _contrastMat.SetInt("_Contrast", contrastLevel);
                 preview = Utility.ApplyShader(preview, _contrastMat);
+            }
+
+            int hueLevel = serializedObject.FindProperty("Correction").FindPropertyRelative("Hue").intValue;
+            if (hueLevel != 0)
+            {
+                _hueMat.SetInt("_Hue", hueLevel);
+                preview = Utility.ApplyShader(preview, _hueMat);
             }
 
             int saturationLevel = serializedObject.FindProperty("Correction").FindPropertyRelative("Saturation").intValue;

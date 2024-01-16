@@ -17,6 +17,7 @@ namespace IToy
         Texture2D preview;
 
         #region Materials
+        Material _backgroundMat;
         Material _flipHorizontalMat;
         Material _flipVerticalMat;
         Material _cropMat;
@@ -49,8 +50,8 @@ namespace IToy
             }
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("RemoveBackground"));
-            if (serializedObject.FindProperty("RemoveBackground").intValue == 3)
-                EditorGUILayout.ColorField(" ", Color.white);
+            if (serializedObject.FindProperty("RemoveBackground").intValue == (int)RemoveBackgroundOpts.Custom)
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("RemoveBackgroundColor"));
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("Transform"));
 
@@ -91,6 +92,7 @@ namespace IToy
             logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Data/logo.png");
 
             #region Init shaders
+            Shader backgroundShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Background.shader");
             Shader flipHorizontalShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Transform/FlipHorizontal.shader");
             Shader flipVerticalShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Transform/FlipVertical.shader");
             Shader cropShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Transform/Crop.shader");
@@ -98,6 +100,7 @@ namespace IToy
             Shader contrastShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Correction/Contrast.shader");
             Shader hueShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Correction/Hue.shader");
             Shader saturationShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Correction/Saturation.shader");
+            _backgroundMat = new Material(backgroundShader);
             _flipHorizontalMat = new Material(flipHorizontalShader);
             _flipVerticalMat = new Material(flipVerticalShader);
             _cropMat = new Material(cropShader);
@@ -123,43 +126,59 @@ namespace IToy
             RectInt cropValues = serializedObject.FindProperty("Transform").FindPropertyRelative("Crop").rectIntValue;
             if (cropValues.x != 0 || cropValues.y != 0 || cropValues.width != 0 || cropValues.height != 0)
             {
-                _cropMat.SetInt("_Top", (int)cropValues.x);
-                _cropMat.SetInt("_Right", (int)cropValues.y);
-                _cropMat.SetInt("_Bottom", (int)cropValues.width);
-                _cropMat.SetInt("_Left", (int)cropValues.height);
+                _cropMat.SetInteger("_Top", cropValues.x);
+                _cropMat.SetInteger("_Right", cropValues.y);
+                _cropMat.SetInteger("_Bottom", cropValues.width);
+                _cropMat.SetInteger("_Left", cropValues.height);
                preview = Utility.ApplyShader(preview, _cropMat);
+            }
+
+            int removeBackground = serializedObject.FindProperty("RemoveBackground").enumValueIndex;
+            if (removeBackground != (int)RemoveBackgroundOpts.None)
+            {
+                Color colorToRemove;
+                if(removeBackground == (int)RemoveBackgroundOpts.White)
+                    colorToRemove = Color.white;
+                else if(removeBackground == (int)RemoveBackgroundOpts.Black)
+                    colorToRemove = Color.black;
+                else
+                    colorToRemove = serializedObject.FindProperty("RemoveBackgroundColor").colorValue;
+
+                _backgroundMat.SetColor("_RemoveColor", colorToRemove);
+                preview = Utility.ApplyShader(preview, _backgroundMat);
             }
 
             if (control.Transform.FlipHorizontal)
                 preview = Utility.ApplyShader(preview, _flipHorizontalMat);
+
             if (control.Transform.FlipVertical)
                 preview = Utility.ApplyShader(preview, _flipVerticalMat);
 
             int brightnessLevel = serializedObject.FindProperty("Correction").FindPropertyRelative("Brightness").intValue;
             if(brightnessLevel != 0)
             {
-                _brightnessMat.SetInt("_Brightness", brightnessLevel);
+                _brightnessMat.SetInteger("_Brightness", brightnessLevel);
                 preview = Utility.ApplyShader(preview, _brightnessMat);
             }
 
             int contrastLevel = serializedObject.FindProperty("Correction").FindPropertyRelative("Contrast").intValue;
             if (contrastLevel != 0)
             {
-                _contrastMat.SetInt("_Contrast", contrastLevel);
+                _contrastMat.SetInteger("_Contrast", contrastLevel);
                 preview = Utility.ApplyShader(preview, _contrastMat);
             }
 
             int hueLevel = serializedObject.FindProperty("Correction").FindPropertyRelative("Hue").intValue;
             if (hueLevel != 0)
             {
-                _hueMat.SetInt("_Hue", hueLevel);
+                _hueMat.SetInteger("_Hue", hueLevel);
                 preview = Utility.ApplyShader(preview, _hueMat);
             }
 
             int saturationLevel = serializedObject.FindProperty("Correction").FindPropertyRelative("Saturation").intValue;
             if (saturationLevel != 0)
             {
-                _saturationMat.SetInt("_Saturation", saturationLevel);
+                _saturationMat.SetInteger("_Saturation", saturationLevel);
                 preview = Utility.ApplyShader(preview, _saturationMat);
             }
 

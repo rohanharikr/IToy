@@ -24,19 +24,21 @@ namespace IToy
         [SerializeReference]
         public Texture2D Current;
 
-        public enum RemoveBackgroundOpts
-        {
-            None, White, Black, Custom
-        }
-
         public RemoveBackgroundOpts RemoveBackground;
-
-        [Range(-100, 100)]
-        public int Saturation;
 
         public Transform Transform;
 
         public Correction Correction;
+
+        public Color RemoveBackgroundColor;
+    }
+
+    public enum RemoveBackgroundOpts
+    {
+        None,
+        White,
+        Black,
+        Custom,
     }
 
     [Serializable]

@@ -1,17 +1,16 @@
 ﻿using System.IO;
 using UnityEditor;
 using UnityEngine;
-using static UnityEditor.ShaderData;
 
 namespace IToy
 {
-    [CustomEditor(typeof(IToyControl))]
+    [CustomEditor(typeof(Toy))]
     [CanEditMultipleObjects]
-    public class ControlInspector : Editor
+    public class ToyInspector : Editor
     {
         bool _isAdvancedExpanded = false;
 
-        IToyControl control;
+        Toy toy;
         Texture2D logo;
         Texture2D original;
 
@@ -133,7 +132,7 @@ namespace IToy
                     EditorGUILayout.LabelField("Reset + Send off");
                     if (GUILayout.Button("Self-Destruct / 自己破壊", GUILayout.ExpandWidth(false)))
                     {
-                        SelfDestruct(control);
+                        SelfDestruct(toy);
                     };
                 }
             }
@@ -203,7 +202,7 @@ namespace IToy
 
         void Init()
         {
-            control = (IToyControl)target;
+            toy = (Toy)target;
             logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Data/logo.png");
 
             #region Init serializable properties
@@ -248,7 +247,7 @@ namespace IToy
             // LoadImage will replace with the size of the incoming image.
             original = new Texture2D(0, 0);
 
-            ImageConversion.LoadImage(original, control.Original);
+            ImageConversion.LoadImage(original, toy.Original);
 
             DrawPreview();
         }
@@ -282,10 +281,10 @@ namespace IToy
                 preview = Utility.ApplyShader(preview, _backgroundMat);
             }
 
-            if (control.Transform.FlipHorizontal)
+            if (toy.Transform.FlipHorizontal)
                 preview = Utility.ApplyShader(preview, _flipHorizontalMat);
 
-            if (control.Transform.FlipVertical)
+            if (toy.Transform.FlipVertical)
                 preview = Utility.ApplyShader(preview, _flipVerticalMat);
 
             int brightnessLevel = serializedObject.FindProperty("Correction").FindPropertyRelative("Brightness").intValue;
@@ -324,14 +323,14 @@ namespace IToy
             _saturationMat.RevertAllPropertyOverrides();
         }
 
-        void SelfDestruct(IToyControl control)
+        void SelfDestruct(Toy toy)
         {
-            string currentAssetPath = AssetDatabase.GetAssetPath(control.Current);
+            string currentAssetPath = AssetDatabase.GetAssetPath(toy.Current);
             string currentAssetDirPath = Path.GetDirectoryName(currentAssetPath);
             AssetDatabase.DeleteAsset(currentAssetPath);
-            File.WriteAllBytes(Path.Combine(currentAssetDirPath, "cat.png"), control.Original);
-            string controlPath = AssetDatabase.GetAssetPath(control);
-            AssetDatabase.DeleteAsset(controlPath);
+            File.WriteAllBytes(Path.Combine(currentAssetDirPath, "cat.png"), toy.Original);
+            string toyPath = AssetDatabase.GetAssetPath(toy);
+            AssetDatabase.DeleteAsset(toyPath);
             AssetDatabase.Refresh();
         }
     }

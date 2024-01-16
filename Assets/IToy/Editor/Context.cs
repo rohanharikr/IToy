@@ -42,7 +42,7 @@ namespace IToy
             //OP done - Unset Read/Write access
             Utility.ReadWriteAccess(assetPath, false);
 
-            //Delete original image (we save this in IToyControl SO)
+            //Delete original image (we save this in Toy SO)
             AssetDatabase.DeleteAsset(assetPath);
 
             //Write grayscale to .png file
@@ -52,17 +52,17 @@ namespace IToy
             AssetDatabase.Refresh();
             Texture2D currentAsset = AssetDatabase.LoadAssetAtPath<Texture2D>(grayscaleAssetPath);
 
-            //Create IToyControl SO
-            IToyControl control = ScriptableObject.CreateInstance<IToyControl>();
-            control.Original = originalAsset;
-            control.Current = currentAsset;
-            control.Transform = new IToy.Transform();
-            control.Transform.FlipHorizontal = true;
-            AssetDatabase.CreateAsset(control, Path.Combine(assetDirPath, assetName + ".asset"));
+            //Create Toy SO
+            Toy toy = ScriptableObject.CreateInstance<Toy>();
+            toy.Original = originalAsset;
+            toy.Current = currentAsset;
+            toy.Transform = new IToy.Transform();
+            toy.Transform.FlipHorizontal = true;
+            AssetDatabase.CreateAsset(toy, Path.Combine(assetDirPath, assetName + ".asset"));
             AssetDatabase.SaveAssets();
 
             EditorUtility.FocusProjectWindow();
-            Selection.activeObject = control;
+            Selection.activeObject = toy;
         }
 
         [MenuItem("Assets/IToy/Flip Vertical")]
@@ -88,7 +88,7 @@ namespace IToy
             //OP done - Unset Read/Write access
             Utility.ReadWriteAccess(assetPath, false);
 
-            //Delete original image (we save this in IToyControl SO)
+            //Delete original image (we save this in Toy SO)
             AssetDatabase.DeleteAsset(assetPath);
 
             //Write grayscale to .png file
@@ -98,13 +98,13 @@ namespace IToy
             AssetDatabase.Refresh();
             Texture2D currentAsset = AssetDatabase.LoadAssetAtPath<Texture2D>(grayscaleAssetPath);
 
-            //Create IToyControl SO
-            IToyControl control = ScriptableObject.CreateInstance<IToyControl>();
-            control.Original = originalAsset;
-            control.Current = currentAsset;
-            control.Transform = new IToy.Transform();
-            control.Transform.FlipVertical = true;
-            AssetDatabase.CreateAsset(control, Path.Combine(assetDirPath, assetName + ".asset"));
+            //Create Toy SO
+            Toy toy = ScriptableObject.CreateInstance<Toy>();
+            toy.Original = originalAsset;
+            toy.Current = currentAsset;
+            toy.Transform = new IToy.Transform();
+            toy.Transform.FlipVertical = true;
+            AssetDatabase.CreateAsset(toy, Path.Combine(assetDirPath, assetName + ".asset"));
             AssetDatabase.SaveAssets();
         }
 
@@ -136,7 +136,7 @@ namespace IToy
             //OP done - Unset Read/Write access
             Utility.ReadWriteAccess(assetPath, false);
 
-            //Delete original image (we save this in IToyControl SO)
+            //Delete original image (we save this in Toy SO)
             AssetDatabase.DeleteAsset(assetPath);
 
             //Write grayscale to .png file
@@ -146,13 +146,13 @@ namespace IToy
             AssetDatabase.Refresh();
             Texture2D currentAsset = AssetDatabase.LoadAssetAtPath<Texture2D>(grayscaleAssetPath);
 
-            //Create IToyControl SO
-            IToyControl control = ScriptableObject.CreateInstance<IToyControl>();
-            control.Original = originalAsset;
-            control.Current = currentAsset;
-            control.Correction = new IToy.Correction();
-            control.Correction.Saturation = -100;
-            AssetDatabase.CreateAsset(control, Path.Combine(assetDirPath, assetName + ".asset"));
+            //Create Toy SO
+            Toy toy = ScriptableObject.CreateInstance<Toy>();
+            toy.Original = originalAsset;
+            toy.Current = currentAsset;
+            toy.Correction = new IToy.Correction();
+            toy.Correction.Saturation = -100;
+            AssetDatabase.CreateAsset(toy, Path.Combine(assetDirPath, assetName + ".asset"));
             AssetDatabase.SaveAssets();
         }
     }

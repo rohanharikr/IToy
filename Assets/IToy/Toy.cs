@@ -1,10 +1,9 @@
 ﻿using System;
-using System.ComponentModel;
 using UnityEngine;
 
 namespace IToy
 {
-    public class IToyControl : ScriptableObject
+    public class Toy : ScriptableObject
     {
         /*
          * Why byte[]?

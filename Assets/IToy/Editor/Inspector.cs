@@ -61,7 +61,7 @@ namespace IToy
                 Texture2D transparencyTex = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Data/transparency-bg.jpg");
                 int previewSize = 208;
                 GUI.Box(new Rect(18, 115, previewSize, previewSize), transparencyTex);
-                GUI.Box(new Rect(240, 115, previewSize, previewSize), transparencyTex);
+                GUI.Box(new Rect(241, 115, previewSize, previewSize), transparencyTex);
 
                 using (new EditorGUILayout.VerticalScope())
                 {
@@ -113,6 +113,7 @@ namespace IToy
             EditorGUILayout.Separator();
             EditorGUILayout.Separator();
 
+            
             if (GUILayout.Button("Save changes", GUILayout.ExpandWidth(false)))
             {
                 byte[] file = preview.EncodeToPNG();

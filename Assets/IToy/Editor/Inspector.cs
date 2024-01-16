@@ -41,7 +41,20 @@ namespace IToy
         {
             serializedObject.Update();
 
-            GUILayout.Label(logo, GUILayout.Width(120), GUILayout.Height(60));
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                GUILayout.Label(logo, GUILayout.Width(100), GUILayout.Height(100));
+                using (new EditorGUILayout.VerticalScope(GUILayout.ExpandHeight(true)))
+                {
+                    EditorGUILayout.Space(20);
+                    EditorGUILayout.LabelField("IToy Image Processor", EditorStyles.boldLabel);
+                    EditorGUILayout.LabelField("@rohanharikr / 2024.01.17");
+                    if (EditorGUILayout.LinkButton("Source on GitHub"))
+                        Application.OpenURL("https://github.com/rohanharikr/IToy");
+                }
+            }
+
+            EditorGUILayout.Separator();
 
             using (new EditorGUILayout.HorizontalScope())
             {

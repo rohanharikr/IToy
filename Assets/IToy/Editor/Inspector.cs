@@ -51,7 +51,7 @@ namespace IToy
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("RemoveBackground"));
             if (serializedObject.FindProperty("RemoveBackground").intValue == (int)RemoveBackgroundOpts.Custom)
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("RemoveBackgroundColor"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("RemoveBackgroundColor"), new GUIContent(" "));
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("Transform"));
 

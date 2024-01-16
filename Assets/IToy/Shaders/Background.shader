@@ -1,64 +1,65 @@
-Shader "IToy/Crop"
+Shader "IToy/Background"
 {
-	Properties
-	{
-		_MainTex ("Texture", 2D) = "white" {}
-		_Top ("Remove Top", Int) = 0
-		_Bottom ("Remove Bottom", Int) = 0
-		_Left ("Remove Left", Int) = 0
-		_Right ("Remove Right", Int) = 0
-	}
+    Properties
+    {
+        _MainTex ("Texture", 2D) = "white" {}
+        _RemoveColor ("Color to Remove", Color) = (0, 0, 0, 0)
+    }
+    SubShader
+    {
+        Tags { "RenderType"="Opaque" }
+        LOD 100
 
-	SubShader
-	{
-		Pass
-		{
-			CGPROGRAM
-			#pragma vertex vertex_shader
-			#pragma fragment pixel_shader
-			#pragma target 3.0
+        Pass
+        {
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+            // make fog work
+            #pragma multi_compile_fog
 
-			#include "UnityCG.cginc"
+            #include "UnityCG.cginc"
 
-			sampler2D _MainTex;
-			int _Top;
-			int _Bottom;
-			int _Left;
-			int _Right;
+            struct appdata
+            {
+                float4 vertex : POSITION;
+                float2 uv : TEXCOORD0;
+            };
 
-			struct appdata
-			{
-				float4 vertex : POSITION;
-				float2 uv : TEXCOORD0;
-			};
+            struct v2f
+            {
+                float2 uv : TEXCOORD0;
+                UNITY_FOG_COORDS(1)
+                float4 vertex : SV_POSITION;
+            };
 
-			struct v2f
-			{
-				float4 pos : POSITION;
-				float2 uv : TEXCOORD0;
-			};
+            sampler2D _MainTex;
+            float4 _MainTex_ST;
+            fixed4 _RemoveColor;
 
-			v2f vertex_shader(appdata v)
-			{
-				v2f o;
-				o.pos = UnityObjectToClipPos(v.vertex);
-				o.uv = v.uv;
-				return o;
-			}
+            v2f vert (appdata v)
+            {
+                v2f o;
+                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                UNITY_TRANSFER_FOG(o,o.vertex);
+                return o;
+            }
 
-			bool isgreen(in vec3 color) {
-				return 0.6 * color.g > color.r && 0.6 * color.g > color.b;
-			}
+            bool isColorToBeRemoved(in fixed4 color) {
+                float threshold = 0.75; // Adjust the threshold as needed
+                // Check if the color is close to _RemoveColor for each channel
+                return length(color.rgb - _RemoveColor.rgb) < threshold;
+            }
 
-			fixed4 pixel_shader(v2f i) : COLOR
-			{
-				color c = ;
-				if (!isgreen(foreground)) {
-					color = foreground;
-				}
-			}
-
-			ENDCG
-		}
-	}
+            fixed4 frag (v2f i) : SV_Target
+            {
+                fixed4 col = tex2D(_MainTex, i.uv);
+                if (isColorToBeRemoved(col))
+                    discard;
+                return col;
+            }
+            ENDCG
+        }
+    }
 }

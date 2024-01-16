@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using UnityEditor;
 using UnityEngine;
+using static UnityEditor.ShaderData;
 
 namespace IToy
 {
@@ -223,7 +224,11 @@ namespace IToy
                 preview = Utility.ApplyShader(preview, _saturationMat);
             }
 
+            _backgroundMat.RevertAllPropertyOverrides();
+            _cropMat.RevertAllPropertyOverrides();
             _brightnessMat.RevertAllPropertyOverrides();
+            _contrastMat.RevertAllPropertyOverrides();
+            _hueMat.RevertAllPropertyOverrides();
             _saturationMat.RevertAllPropertyOverrides();
         }
 

@@ -17,6 +17,28 @@ namespace IToy
 
         Texture2D preview;
 
+        #region Original values
+        int _removeBackgroundOriginal;
+        bool _flipHorizontalOriginal;
+        bool _flipVerticalOriginal;
+        RectInt _cropOriginal;
+        int _brightnessOriginal;
+        int _contrastOriginal;
+        int _hueOriginal;
+        int _saturationOriginal;
+        #endregion
+
+        #region Current
+        SerializedProperty _removeBackground;
+        SerializedProperty _flipHorizontal;
+        SerializedProperty _flipVertical;
+        SerializedProperty _crop;
+        SerializedProperty _brightness;
+        SerializedProperty _contrast;
+        SerializedProperty _hue;
+        SerializedProperty _saturation;
+        #endregion
+
         #region Materials
         Material _backgroundMat;
         Material _flipHorizontalMat;
@@ -82,9 +104,9 @@ namespace IToy
             EditorGUILayout.Separator();
             EditorGUILayout.Separator();
 
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("RemoveBackground"));
-            if (serializedObject.FindProperty("RemoveBackground").intValue == (int)RemoveBackgroundOpts.Custom)
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("RemoveBackgroundColor"), new GUIContent(" "));
+            EditorGUILayout.PropertyField(_removeBackground);
+            if (_removeBackground.intValue == (int)RemoveBackgroundOpts.Custom)
+                EditorGUILayout.PropertyField(_removeBackground, new GUIContent(" "));
 
             EditorGUILayout.Separator();
 
@@ -115,12 +137,15 @@ namespace IToy
             EditorGUILayout.Separator();
 
             
-            if (GUILayout.Button("Save changes", GUILayout.ExpandWidth(false)))
+            if(ChangesMade())
             {
-                byte[] file = preview.EncodeToPNG();
-                File.WriteAllBytes("Assets/Resources/cat.png", file);
-                AssetDatabase.Refresh();
-            };
+                if (GUILayout.Button("Save changes", GUILayout.ExpandWidth(false)))
+                {
+                    byte[] file = preview.EncodeToPNG();
+                    File.WriteAllBytes("Assets/Resources/cat.png", file);
+                    AssetDatabase.Refresh();
+                };
+            }
 
             if (serializedObject.ApplyModifiedProperties())
             {
@@ -128,10 +153,62 @@ namespace IToy
             }
         }
 
+        bool ChangesMade()
+        {
+            if (_removeBackgroundOriginal != _removeBackground.enumValueIndex)
+                return true;
+
+            if (_flipHorizontalOriginal != _flipHorizontal.boolValue)
+                return true;
+
+            if (_flipVerticalOriginal != _flipVertical.boolValue)
+                return true;
+
+            if (_cropOriginal.x != _crop.rectIntValue.x ||
+                _cropOriginal.y != _crop.rectIntValue.y ||
+                _cropOriginal.width != _crop.rectIntValue.width ||
+                _cropOriginal.height != _crop.rectIntValue.height
+                )
+                return true;
+
+            if (_brightnessOriginal != _brightness.intValue)
+                return true;
+
+            if (_contrastOriginal != _contrast.intValue)
+                return true;
+
+            if (_hueOriginal != _hue.intValue)
+                return true;
+
+            if (_saturationOriginal != _saturation.intValue)
+                return true;
+
+            return false;
+        }
+
         void Init()
         {
             control = (IToyControl)target;
             logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Data/logo.png");
+
+            #region Init serializable properties
+            _removeBackground = serializedObject.FindProperty("RemoveBackground");
+            _removeBackgroundOriginal = _removeBackground.enumValueIndex;
+            _flipHorizontal = serializedObject.FindProperty("Transform").FindPropertyRelative("FlipHorizontal");
+            _flipHorizontalOriginal = _flipHorizontal.boolValue;
+            _flipVertical = serializedObject.FindProperty("Transform").FindPropertyRelative("FlipVertical");
+            _flipVerticalOriginal = _flipVertical.boolValue;
+            _crop = serializedObject.FindProperty("Transform").FindPropertyRelative("Crop");
+            _cropOriginal = _flipVertical.rectIntValue;
+            _brightness = serializedObject.FindProperty("Correction").FindPropertyRelative("Brightness");
+            _brightnessOriginal = _brightness.intValue;
+            _contrast = serializedObject.FindProperty("Correction").FindPropertyRelative("Contrast");
+            _contrastOriginal = _contrast.intValue;
+            _hue = serializedObject.FindProperty("Correction").FindPropertyRelative("Hue");
+            _hueOriginal = _hue.intValue;
+            _saturation = serializedObject.FindProperty("Correction").FindPropertyRelative("Saturation");
+            _saturationOriginal = _saturation.intValue;
+            #endregion
 
             #region Init shaders
             Shader backgroundShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Background.shader");

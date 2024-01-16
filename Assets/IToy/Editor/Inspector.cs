@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,7 +16,8 @@ public class ControlInspector : Editor
     IToyControl control;
     Texture2D logo;
     Texture2D original;
-    Texture2D current;
+
+    Texture2D preview;
 
     public Material flipHorizontalMaterial;
 
@@ -23,7 +25,6 @@ public class ControlInspector : Editor
     {
         control = (IToyControl)target;
         logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Data/logo.png");
-        current = control.Current;
         Shader shader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/FlipHorizontal.shader");
         flipHorizontalMaterial = new Material(shader);
 
@@ -32,6 +33,13 @@ public class ControlInspector : Editor
         original = new Texture2D(0, 0);
 
         ImageConversion.LoadImage(original, control.Original);
+
+        preview = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Resources/cat.png");
+    }
+
+    private void OnDisable()
+    {
+        //TBD warn if unsaved changes
     }
 
     public override void OnInspectorGUI()
@@ -43,18 +51,14 @@ public class ControlInspector : Editor
         using (new EditorGUILayout.HorizontalScope())
         {
             GUILayout.Box(original, GUILayout.Width(212), GUILayout.Height(212));
-            GUILayout.Box(current, GUILayout.Width(212), GUILayout.Height(212));
+            GUILayout.Box(preview, GUILayout.Width(212), GUILayout.Height(212));
         }
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("RemoveBackground"));
         if (serializedObject.FindProperty("RemoveBackground").intValue == 3)
             EditorGUILayout.ColorField(" ", Color.white);
 
-            EditorGUILayout.Separator();
-
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("Transform"));
-
-            EditorGUILayout.Separator();
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("Transform"));
 
         _isCorrectionExpanded = EditorGUILayout.BeginFoldoutHeaderGroup(_isCorrectionExpanded, "Correction");
         if(_isCorrectionExpanded)
@@ -82,41 +86,38 @@ public class ControlInspector : Editor
         }
         EditorGUILayout.EndFoldoutHeaderGroup();
 
-        if (serializedObject.ApplyModifiedProperties())
+        if(GUILayout.Button("Save changes", GUILayout.ExpandWidth(false)))
         {
-            Texture2D flippedTexture = ApplyShader(current, flipHorizontalMaterial);
-            byte[] file = flippedTexture.EncodeToPNG();
+            byte[] file = preview.EncodeToPNG();
             File.WriteAllBytes("Assets/Resources/cat.png", file);
             AssetDatabase.Refresh();
+        }
+
+        if (serializedObject.ApplyModifiedProperties())
+        {
+            RedrawPreview();
+        }
+    }
+
+    void RedrawPreview()
+    {
+        preview = original;
+        //TBD Cache results - only recompute what is necessary
+        if(control.Transform.FlipHorizontal)
+        {
+            preview = ApplyShader(preview, flipHorizontalMaterial);
         }
     }
 
     Texture2D ApplyShader(Texture2D inputTexture, Material shaderMaterial)
     {
-        // Create a temporary RenderTexture
-        RenderTexture rt = RenderTexture.GetTemporary(inputTexture.width, inputTexture.height, 0, RenderTextureFormat.Default, RenderTextureReadWrite.Default);
-
-        // Create a temporary Texture2D
-        Texture2D outputTexture = new Texture2D(inputTexture.width, inputTexture.height);
-
-        // Set the RenderTexture as the active render target
-        Graphics.SetRenderTarget(rt);
-
-        // Clear the render target
-        GL.Clear(true, true, Color.clear);
-
-        // Set the material with the shader
+        Texture2D res = new Texture2D(inputTexture.width, inputTexture.height);
+        RenderTexture rt = RenderTexture.GetTemporary(inputTexture.width, inputTexture.height);
         Graphics.Blit(inputTexture, rt, shaderMaterial);
-
-        // Read the RenderTexture data into the Texture2D
         RenderTexture.active = rt;
-        outputTexture.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
-
-        // Release the temporary objects
-        RenderTexture.ReleaseTemporary(rt);
-        RenderTexture.active = null;
-
-        return outputTexture;
+        res.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+        res.Apply();
+        return res;
     }
 
     void SelfDestruct(IToyControl control)

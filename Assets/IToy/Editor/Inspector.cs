@@ -125,13 +125,13 @@ namespace IToy
                 {
                     EditorGUILayout.Separator();
                     EditorGUILayout.LabelField("Reset the image to it's former glory.");
-                    GUILayout.Button("Reset", GUILayout.ExpandWidth(false));
+                    GUILayout.Button("Reset / リセット", GUILayout.ExpandWidth(false));
                     EditorGUILayout.Separator();
                     EditorGUILayout.LabelField("Reset the image to it's former glory.");
-                    GUILayout.Button("Send off IToy", GUILayout.ExpandWidth(false));
+                    GUILayout.Button("Send off IToy / 別れ", GUILayout.ExpandWidth(false));
                     EditorGUILayout.Separator();
                     EditorGUILayout.LabelField("Reset + Send off");
-                    if (GUILayout.Button("Self Destruct", GUILayout.ExpandWidth(false)))
+                    if (GUILayout.Button("Self-Destruct / 自己破壊", GUILayout.ExpandWidth(false)))
                     {
                         SelfDestruct(control);
                     };

@@ -121,9 +121,16 @@ namespace IToy
             _isAdvancedExpanded = EditorGUILayout.BeginFoldoutHeaderGroup(_isAdvancedExpanded, "Advanced");
             if (_isAdvancedExpanded)
             {
-                using (new GUILayout.HorizontalScope())
+                using (new GUILayout.VerticalScope())
                 {
+                    EditorGUILayout.Separator();
+                    EditorGUILayout.LabelField("Reset the image to it's former glory.");
                     GUILayout.Button("Reset", GUILayout.ExpandWidth(false));
+                    EditorGUILayout.Separator();
+                    EditorGUILayout.LabelField("Reset the image to it's former glory.");
+                    GUILayout.Button("Send off IToy", GUILayout.ExpandWidth(false));
+                    EditorGUILayout.Separator();
+                    EditorGUILayout.LabelField("Reset + Send off");
                     if (GUILayout.Button("Self Destruct", GUILayout.ExpandWidth(false)))
                     {
                         SelfDestruct(control);
@@ -139,12 +146,20 @@ namespace IToy
             
             if(ChangesMade())
             {
-                if (GUILayout.Button("Save changes", GUILayout.ExpandWidth(false)))
+                using (new EditorGUILayout.HorizontalScope())
                 {
-                    byte[] file = preview.EncodeToPNG();
-                    File.WriteAllBytes("Assets/Resources/cat.png", file);
-                    AssetDatabase.Refresh();
-                };
+                    if (GUILayout.Button("Save changes", GUILayout.ExpandWidth(false)))
+                    {
+                        byte[] file = preview.EncodeToPNG();
+                        File.WriteAllBytes("Assets/Resources/cat.png", file);
+                        AssetDatabase.Refresh();
+                    };
+                    if (GUILayout.Button("Discard changes", GUILayout.ExpandWidth(false)))
+                    {
+                        _flipHorizontal.boolValue = _flipHorizontalOriginal;
+                        //TBD
+                    };
+                }
             }
 
             if (serializedObject.ApplyModifiedProperties())

@@ -2,13 +2,21 @@
 using UnityEngine;
 using UnityEditor;
 using System;
+using UnityEditor.PackageManager.UI;
 
 namespace IToy
 {
     public class Context
     {
+        [MenuItem("Assets/IToy/Flip Horizontal", true)]
+        static bool ValidateFlipHorizontal()
+        {
+            //TBD
+            return true;
+        }
+
         [MenuItem("Assets/IToy/Flip Horizontal")]
-        public static void FlipHorizontal()
+        static void FlipHorizontal()
         {
             string assetGuid = Selection.assetGUIDs[0];
             string assetPath = AssetDatabase.GUIDToAssetPath(assetGuid);
@@ -52,10 +60,13 @@ namespace IToy
             control.Transform.FlipHorizontal = true;
             AssetDatabase.CreateAsset(control, Path.Combine(assetDirPath, assetName + ".asset"));
             AssetDatabase.SaveAssets();
+
+            EditorUtility.FocusProjectWindow();
+            Selection.activeObject = control;
         }
 
         [MenuItem("Assets/IToy/Flip Vertical")]
-        public static void FlipVertical()
+        static void FlipVertical()
         {
             string assetGuid = Selection.assetGUIDs[0];
             string assetPath = AssetDatabase.GUIDToAssetPath(assetGuid);
@@ -98,7 +109,7 @@ namespace IToy
         }
 
         [MenuItem("Assets/IToy/Grayscale")]
-        public static void Grayscale()
+        static void Grayscale()
         {
             string assetGuid = Selection.assetGUIDs[0];
             string assetPath = AssetDatabase.GUIDToAssetPath(assetGuid);

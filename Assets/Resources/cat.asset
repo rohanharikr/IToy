@@ -25,3 +25,8 @@ MonoBehaviour:
       y: 0
       width: 0
       height: 0
+  Correction:
+    Brightness: 0
+    Contrast: 0
+    Hue: 0
+    Saturation: 0

@@ -19,7 +19,7 @@ namespace IToy
 
         Material _flipHorizontalMat;
         Material _flipVerticalMat;
-        Material _cropMat;
+        Material _saturationMat;
 
         private void OnEnable()
         {
@@ -88,10 +88,10 @@ namespace IToy
             #region Init shaders
             Shader flipHorizontalShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/FlipHorizontal.shader");
             Shader flipVerticalShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/FlipVertical.shader");
-            Shader cropShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Crop.shader");
+            Shader saturationShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Saturation.shader");
             _flipHorizontalMat = new Material(flipHorizontalShader);
             _flipVerticalMat = new Material(flipVerticalShader);
-            _cropMat = new Material(cropShader);
+            _saturationMat = new Material(saturationShader);
             #endregion
 
             // Create a texture. Texture size does not matter, since

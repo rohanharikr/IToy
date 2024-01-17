@@ -33,7 +33,7 @@ namespace IToy
                 {
                     EditorGUILayout.Space(20);
                     EditorGUILayout.LabelField("IToy Image Processor", EditorStyles.boldLabel);
-                    EditorGUILayout.LabelField("@rohanharikr / 1.0.4");
+                    EditorGUILayout.LabelField("@rohanharikr / 1.0.5");
                     if (EditorGUILayout.LinkButton("Source on GitHub"))
                         Application.OpenURL("https://github.com/rohanharikr/IToy");
                 }

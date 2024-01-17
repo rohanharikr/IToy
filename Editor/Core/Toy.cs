@@ -79,7 +79,7 @@ namespace IToy
                     break;
                 case "Grayscale":
                     toy.Correction.Saturation = (int)value;
-                    processor.Saturation(0);
+                    processor.Saturation(-100);
                     break;
             }
 

@@ -19,25 +19,28 @@ https://github.com/rohanharikr/RockstarGamesLauncher/assets/12775813/70d57f4a-88
 - Non-destructive (Revert to the original image anytime!)
 
 ## Screenshots
-
 <img src="./README/HomeView.png" width="50%"/><img src="./README/Search.png" width="50%"/>
 <img src="./README/PlayView.png" width="50%"/><img src="./README/DetailModal.png" width="50%"/>
 
 ## Installing
 
 #### Package Manager (recommended)
-1. Open the package manager (Window > Package Manager)
+
+1. Open the package manager ("Window" > "Package Manager")
 1. Click on the plus icon and "Add package from git URL..."
 1. Enter https://github.com/rohanharikr/IToy.git and click "Add"
 1. Wait until the package manager finishes installing the package and recompiling
 
 #### Importing Package
+
 1. Download the [latest release](https://github.com/rohanharikr/IToy/releases)
 1. Double-click the .unitypackage or import it
    
-#### Lazy way
-1. Download this repository as ZIP or by cloning it
-1. Drag it into your "Assets" folder
+#### Manual 
+
+1. Dowload this repository as a zip file, extract the archive
+1. In Unity, go in "Window" > "Package Manager" > "Add Package from disk"
+1. Select the "package.json" file located at the root of the package folder
 
 ## Using
 

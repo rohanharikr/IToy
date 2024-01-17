@@ -3,7 +3,7 @@ Shader "IToy/Saturation"
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
-		_Saturation ("SaturationVal", Range(-100, 100)) = 0
+		_Correction ("Saturation", Range(-100, 100)) = 0
 	}
 
 	SubShader
@@ -18,7 +18,7 @@ Shader "IToy/Saturation"
 			#include "UnityCG.cginc"
 
 			sampler2D _MainTex;
-			float _SaturationVal;
+			float _Correction;
 
 			struct appdata
 			{
@@ -44,7 +44,7 @@ Shader "IToy/Saturation"
 			{
 				fixed4 col = tex2D(_MainTex, i.uv);
 				float gray = dot(col.rgb, float3(0.3, 0.59, 0.11));
-				col.rgb = lerp(gray, col.rgb, (_SaturationVal + 100.0) / 100.0);
+				col.rgb = lerp(gray, col.rgb, (_Correction + 100.0) / 100.0);
 				return col;
 			}
 

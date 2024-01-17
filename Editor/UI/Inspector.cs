@@ -169,15 +169,15 @@ namespace IToy
 
             int contrastLevel = serializedObject.FindProperty("Correction").FindPropertyRelative("Contrast").intValue;
             if (contrastLevel != 0)
-                _processor.Brightness(contrastLevel);
+                _processor.Contrast(contrastLevel);
 
             int hueLevel = serializedObject.FindProperty("Correction").FindPropertyRelative("Hue").intValue;
             if (hueLevel != 0)
-                _processor.Brightness(hueLevel);
+                _processor.Hue(hueLevel);
 
             int saturationLevel = serializedObject.FindProperty("Correction").FindPropertyRelative("Saturation").intValue;
             if (saturationLevel != 0)
-                _processor.Brightness(saturationLevel);
+                _processor.Saturation(saturationLevel);
         }
 
         void ResetChanges()

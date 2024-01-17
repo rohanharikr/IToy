@@ -60,28 +60,28 @@ namespace IToy
         public void FlipVertical() => _texture = Utility.ApplyShader(_texture, _flipVerticalMat);
 
         public void Brightness(int value = 0) {
-            _brightnessMat.SetInteger("_BrightnessVal", value);
+            _brightnessMat.SetInteger("_Correction", value);
             _texture = Utility.ApplyShader(_texture, _brightnessMat);
             _brightnessMat.RevertAllPropertyOverrides();
         }
 
         public void Contrast(int value = 0)
         {
-            _contrastMat.SetInteger("_ContrastVal", value);
+            _contrastMat.SetInteger("_Correction", value);
             _texture = Utility.ApplyShader(_texture, _contrastMat);
             _contrastMat.RevertAllPropertyOverrides();
         }
 
         public void Hue(int value = 0)
         {
-            _hueMat.SetInteger("_HueVal", value);
+            _hueMat.SetInteger("_Correction", value);
             _texture = Utility.ApplyShader(_texture, _hueMat);
             _hueMat.RevertAllPropertyOverrides();
         }
 
         public void Saturation(int value = 0)
         {
-            _saturationMat.SetInteger("_SaturationVal", value);
+            _saturationMat.SetInteger("_Correction", value);
             _texture = Utility.ApplyShader(_texture, _saturationMat);
             _saturationMat.RevertAllPropertyOverrides();
         }

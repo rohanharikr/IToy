@@ -3,7 +3,7 @@ Shader "IToy/Hue"
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
-		_HueVal ("Hue", Range(-180, 180)) = 0
+		_Correction ("Hue", Range(-180, 180)) = 0
 	}
 
 	SubShader
@@ -18,7 +18,7 @@ Shader "IToy/Hue"
 			#include "UnityCG.cginc"
 
 			sampler2D _MainTex;
-			float _HueVal;
+			float _Correction;
 
 			struct appdata
 			{
@@ -138,7 +138,7 @@ Shader "IToy/Hue"
 				fixed4 hsv = RGBToHSV(col);
 
 				// Adjust hue
-				hsv.x = (hsv.x + _HueVal) % 360;
+				hsv.x = (hsv.x + _Correction) % 360;
 				if (hsv.x < 0)
 					hsv.x += 360;
 

@@ -16,18 +16,7 @@ namespace IToy
 
         Texture2D preview;
 
-        #region Original values
-        int _removeBackgroundOriginal;
-        bool _flipHorizontalOriginal;
-        bool _flipVerticalOriginal;
-        RectInt _cropOriginal;
-        int _brightnessOriginal;
-        int _contrastOriginal;
-        int _hueOriginal;
-        int _saturationOriginal;
-        #endregion
-
-        #region Current
+        #region Serialized properties
         SerializedProperty _removeBackground;
         SerializedProperty _flipHorizontal;
         SerializedProperty _flipVertical;
@@ -88,7 +77,7 @@ namespace IToy
                 using (new EditorGUILayout.VerticalScope())
                 {
                     GUILayout.Label(original, GUILayout.Width(previewSize), GUILayout.Height(previewSize));
-                    EditorGUILayout.LabelField("Original");
+                    EditorGUILayout.LabelField("Original / オリジナル");
                 }
                 using (new EditorGUILayout.VerticalScope())
                 {
@@ -96,7 +85,7 @@ namespace IToy
 
                     GUIStyle labelStyle = new GUIStyle(EditorStyles.label);
                     labelStyle.normal.textColor = new Color(242 / 255f, 109 / 255f, 28 / 255f);
-                    EditorGUILayout.LabelField("Preview", labelStyle);
+                    EditorGUILayout.LabelField("Preview / プレビュー", labelStyle);
                 }
             }
 
@@ -123,13 +112,13 @@ namespace IToy
                 using (new GUILayout.VerticalScope())
                 {
                     EditorGUILayout.Separator();
-                    EditorGUILayout.LabelField("Reset the image to it's former glory.");
+                    EditorGUILayout.LabelField("Reset the image to it's former glory");
                     GUILayout.Button("Reset / リセット", GUILayout.ExpandWidth(false));
                     EditorGUILayout.Separator();
-                    EditorGUILayout.LabelField("Reset the image to it's former glory.");
+                    EditorGUILayout.LabelField("Keep the image but bid the toy farewell");
                     GUILayout.Button("Send off IToy / 別れ", GUILayout.ExpandWidth(false));
                     EditorGUILayout.Separator();
-                    EditorGUILayout.LabelField("Reset + Send off");
+                    EditorGUILayout.LabelField("Reset the image and remove the toy");
                     if (GUILayout.Button("Self-Destruct / 自己破壊", GUILayout.ExpandWidth(false)))
                     {
                         SelfDestruct(toy);
@@ -138,66 +127,22 @@ namespace IToy
             }
             EditorGUILayout.EndFoldoutHeaderGroup();
 
-            EditorGUILayout.Separator();
-            EditorGUILayout.Separator();
-            EditorGUILayout.Separator();
+            EditorGUILayout.Space(20);
 
-            
-            if(ChangesMade())
-            {
-                using (new EditorGUILayout.HorizontalScope())
-                {
-                    if (GUILayout.Button("Save changes", GUILayout.ExpandWidth(false)))
-                    {
-                        byte[] file = preview.EncodeToPNG();
-                        File.WriteAllBytes("Assets/Resources/cat.png", file);
-                        AssetDatabase.Refresh();
-                    };
-                    if (GUILayout.Button("Discard changes", GUILayout.ExpandWidth(false)))
-                    {
-                        _flipHorizontal.boolValue = _flipHorizontalOriginal;
-                        //TBD
-                    };
-                }
-            }
-
+            if (GUILayout.Button("Update / アップデート", GUILayout.ExpandWidth(false)))
+                Update();
+              
             if (serializedObject.ApplyModifiedProperties())
             {
                 DrawPreview();
             }
         }
 
-        bool ChangesMade()
+        void Update()
         {
-            if (_removeBackgroundOriginal != _removeBackground.enumValueIndex)
-                return true;
-
-            if (_flipHorizontalOriginal != _flipHorizontal.boolValue)
-                return true;
-
-            if (_flipVerticalOriginal != _flipVertical.boolValue)
-                return true;
-
-            if (_cropOriginal.x != _crop.rectIntValue.x ||
-                _cropOriginal.y != _crop.rectIntValue.y ||
-                _cropOriginal.width != _crop.rectIntValue.width ||
-                _cropOriginal.height != _crop.rectIntValue.height
-                )
-                return true;
-
-            if (_brightnessOriginal != _brightness.intValue)
-                return true;
-
-            if (_contrastOriginal != _contrast.intValue)
-                return true;
-
-            if (_hueOriginal != _hue.intValue)
-                return true;
-
-            if (_saturationOriginal != _saturation.intValue)
-                return true;
-
-            return false;
+            byte[] file = preview.EncodeToPNG();
+            File.WriteAllBytes("Assets/Resources/cat.png", file);
+            AssetDatabase.Refresh();
         }
 
         void Init()
@@ -207,21 +152,13 @@ namespace IToy
 
             #region Init serializable properties
             _removeBackground = serializedObject.FindProperty("RemoveBackground");
-            _removeBackgroundOriginal = _removeBackground.enumValueIndex;
             _flipHorizontal = serializedObject.FindProperty("Transform").FindPropertyRelative("FlipHorizontal");
-            _flipHorizontalOriginal = _flipHorizontal.boolValue;
             _flipVertical = serializedObject.FindProperty("Transform").FindPropertyRelative("FlipVertical");
-            _flipVerticalOriginal = _flipVertical.boolValue;
             _crop = serializedObject.FindProperty("Transform").FindPropertyRelative("Crop");
-            _cropOriginal = _flipVertical.rectIntValue;
             _brightness = serializedObject.FindProperty("Correction").FindPropertyRelative("Brightness");
-            _brightnessOriginal = _brightness.intValue;
             _contrast = serializedObject.FindProperty("Correction").FindPropertyRelative("Contrast");
-            _contrastOriginal = _contrast.intValue;
             _hue = serializedObject.FindProperty("Correction").FindPropertyRelative("Hue");
-            _hueOriginal = _hue.intValue;
             _saturation = serializedObject.FindProperty("Correction").FindPropertyRelative("Saturation");
-            _saturationOriginal = _saturation.intValue;
             #endregion
 
             #region Init shaders

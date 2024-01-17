@@ -16,7 +16,7 @@ MonoBehaviour:
   Current: {fileID: 2800000, guid: 3116dbd79ec999d4bb1104375893f906, type: 3}
   RemoveBackground: 0
   Transform:
-    FlipHorizontal: 1
+    FlipHorizontal: 0
     FlipVertical: 0
     Crop:
       x: 0
@@ -27,5 +27,5 @@ MonoBehaviour:
     Brightness: 0
     Contrast: 0
     Hue: 0
-    Saturation: 0
+    Saturation: -100
   RemoveBackgroundColor: {r: 0, g: 0, b: 0, a: 0}

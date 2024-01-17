@@ -3,6 +3,7 @@
     "version": "1.0.4",
     "displayName": "IToy",
     "description": "Native Image Processor for Unity",
+    "hideInEditor": true,
     "author": {
       "name": "rohanharikr",
       "email": "rohanharikumar80@gmail.com",

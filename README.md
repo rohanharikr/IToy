@@ -7,6 +7,9 @@
 
 https://github.com/rohanharikr/RockstarGamesLauncher/assets/12775813/70d57f4a-8853-48ce-a6dc-18a634379174
 
+> [!Note]
+> This repo has been set up following [Unity's recommended](https://docs.unity3d.com/Manual/cus-layout.html) custom package layout.
+
 ## Features 
 
 - Remove background color

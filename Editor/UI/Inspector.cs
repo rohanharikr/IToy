@@ -184,12 +184,13 @@ namespace IToy
         {
             //Reset image
             File.WriteAllBytes(AssetDatabase.GUIDToAssetPath(_toy.Current), _toy.Original);
+            _processor.Texture = _original;
 
             //It is easier to replace toy with new than setting all values to default in exisitng toy
             string currentAssetPath = AssetDatabase.GUIDToAssetPath(_toy.Current);
             UnityEngine.Object currentAsset = AssetDatabase.LoadAssetAtPath<Texture>(currentAssetPath);
             Toy newToy = ToyUtility.GenerateToy(currentAsset);
-            newToy.name = currentAssetPath; //Name of asset name has to be same for CopySerialized to work
+            newToy.name = Path.GetFileNameWithoutExtension(currentAssetPath); //Name of asset name has to be same for CopySerialized to work
             EditorUtility.CopySerialized(newToy, _toy);
 
             AssetDatabase.Refresh();

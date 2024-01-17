@@ -13,8 +13,7 @@ https://github.com/rohanharikr/RockstarGamesLauncher/assets/12775813/70d57f4a-88
 - Flip horizontal/vertical
 - Crop
 - Color correction (Brightness, Contrast, Hue, Saturation)
-- Non-destructive  
-  *Actions are non-destructive meaning you can always revert to the original image anytime!*
+- Non-destructive (Revert to the original image anytime!)
 
 ## Screenshots
 

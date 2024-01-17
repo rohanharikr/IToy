@@ -136,9 +136,6 @@ namespace IToy
         public static Toy GenerateToy(UnityEngine.Object selection)
         {
             string selectionPath = AssetDatabase.GetAssetPath(selection);
-            string selectionName = Path.GetFileNameWithoutExtension(selectionPath);
-            string selectionDirPath = Path.GetDirectoryName(selectionPath);
-            string toyName = selectionName + ".asset";
 
             Toy toy = ScriptableObject.CreateInstance<Toy>();
             Utility.ReadWriteAccess(selectionPath, true); //Set read/write permission for texture to be read via script

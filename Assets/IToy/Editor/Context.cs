@@ -15,16 +15,24 @@ namespace IToy
         static void RemoveWhiteBackground() => 
             Utility.CreateOrUpdateToy(Selection.activeObject, RemoveBackgroundOpts.White);
 
-        [MenuItem("Assets/IToy/Flip Horizontal")]
+        [MenuItem("Assets/IToy/Remove black background", secondaryPriority = 1)]
+        static void RemoveBlackBackground() =>
+            Utility.CreateOrUpdateToy(Selection.activeObject, RemoveBackgroundOpts.White);
+
+        [MenuItem("Assets/IToy/Flip horizontal", secondaryPriority = 2)]
         static void FlipHorizontal() =>
             Utility.CreateOrUpdateToy(Selection.activeObject, "FlipHorizontal", true);
 
-        [MenuItem("Assets/IToy/Flip Vertical")]
+        [MenuItem("Assets/IToy/Flip vertical", secondaryPriority = 3)]
         static void FlipVertical() =>
             Utility.CreateOrUpdateToy(Selection.activeObject, "FlipVertical", true);
 
-        [MenuItem("Assets/IToy/Grayscale")]
+        [MenuItem("Assets/IToy/Grayscale", secondaryPriority = 4)]
         static void Grayscale() =>
+            Utility.CreateOrUpdateToy(Selection.activeObject, "Grayscale", 0);
+
+        [MenuItem("Assets/IToy/Create toy", secondaryPriority = 5)]
+        static void CreateToy() =>
             Utility.CreateOrUpdateToy(Selection.activeObject, "Grayscale", 0);
     }
 }

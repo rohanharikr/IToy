@@ -5,7 +5,7 @@ namespace IToy
 {
     public class Toy : ScriptableObject
     {
-        // Store original image in SO since we do not want to show in inspector.
+        //Store original image in SO since we do not want to show in inspector
         public byte[] Original;
 
         public string Current;

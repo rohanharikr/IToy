@@ -16,7 +16,7 @@ namespace IToy
 
         public static Texture2D ApplyShader(Texture2D inputTexture, Material shaderMaterial)
         {
-            Texture2D res = new Texture2D(inputTexture.width, inputTexture.height);
+            Texture2D res = new(inputTexture.width, inputTexture.height);
             RenderTexture rt = RenderTexture.GetTemporary(inputTexture.width, inputTexture.height);
             Graphics.Blit(inputTexture, rt, shaderMaterial);
             RenderTexture.active = rt;
@@ -32,22 +32,17 @@ namespace IToy
 
         public static Toy CreateOrUpdateToy(Object selection, string key, object value)
         {
-            string toyAssetPath = GetToyAssetPath(selection);
-
-            Toy toy = CreateOrUpdateCommon(selection, toyAssetPath);
+            Toy toy = SetupCreateOrUpdate(selection);
 
             switch (key)
             {
                 case "FlipHorizontal":
-                    toy.Transform = new IToy.Transform();
                     toy.Transform.FlipHorizontal = (bool)value;
                     break;
                 case "FlipVertical":
-                    toy.Transform = new IToy.Transform();
                     toy.Transform.FlipVertical = (bool)value;
                     break;
                 case "Grayscale":
-                    toy.Correction = new IToy.Correction();
                     toy.Correction.Saturation = (int)value;
                     break;
             }
@@ -62,9 +57,7 @@ namespace IToy
 
         public static Toy CreateOrUpdateToy(Object selection, RemoveBackgroundOpts removeBackground)
         {
-            string toyAssetPath = GetToyAssetPath(selection);
-
-            Toy toy = CreateOrUpdateCommon(selection, toyAssetPath);
+            Toy toy = SetupCreateOrUpdate(selection);
 
             toy.RemoveBackground = removeBackground;
 
@@ -76,28 +69,28 @@ namespace IToy
             return toy;
         }
 
-        private static Toy CreateOrUpdateCommon(Object selection, string toyAssetPath)
+        private static Toy SetupCreateOrUpdate(Object selection)
         {
+            string selectionPath = AssetDatabase.GetAssetPath(selection);
+            string selectionName = Path.GetFileNameWithoutExtension(selectionPath);
+            string selectionDirPath = Path.GetDirectoryName(selectionPath);
+            string toyName = selectionName + ".asset";
+            string toyAssetPath = Path.Combine(selectionDirPath, toyName);
+
             Toy toy = AssetDatabase.LoadAssetAtPath<Toy>(toyAssetPath);
 
             if (toy == null)
             {
                 toy = ScriptableObject.CreateInstance<Toy>();
+                ReadWriteAccess(selectionPath, true); //Set read/write permission for texture to be read va script
                 toy.Original = ((Texture2D)selection).EncodeToPNG();
+                ReadWriteAccess(selectionPath, false); //OP done - revert permissions
                 toy.Current = AssetDatabase.GetAssetPath(selection);
                 AssetDatabase.CreateAsset(toy, toyAssetPath);
                 AssetDatabase.SaveAssets();
             }
 
             return toy;
-        }
-
-        private static string GetToyAssetPath(Object selection)
-        {
-            string selectionPath = AssetDatabase.GetAssetPath(selection);
-            string selectionName = Path.GetFileNameWithoutExtension(selectionPath);
-            string selectionDirPath = Path.GetDirectoryName(selectionPath);
-            return Path.Combine(selectionDirPath, selectionName + ".asset");
         }
     }
 }

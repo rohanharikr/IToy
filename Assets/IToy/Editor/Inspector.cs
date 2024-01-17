@@ -16,16 +16,7 @@ namespace IToy
 
         Texture2D preview;
 
-        #region Serialized properties
         SerializedProperty _removeBackground;
-        SerializedProperty _flipHorizontal;
-        SerializedProperty _flipVertical;
-        SerializedProperty _crop;
-        SerializedProperty _brightness;
-        SerializedProperty _contrast;
-        SerializedProperty _hue;
-        SerializedProperty _saturation;
-        #endregion
 
         #region Materials
         Material _backgroundMat;
@@ -41,11 +32,6 @@ namespace IToy
         private void OnEnable()
         {
             Init();
-        }
-
-        private void OnDisable()
-        {
-            //TBD warn if unsaved changes
         }
 
         public override void OnInspectorGUI()
@@ -83,7 +69,7 @@ namespace IToy
                 {
                     GUILayout.Label(preview, GUILayout.Width(previewSize), GUILayout.Height(previewSize));
 
-                    GUIStyle labelStyle = new GUIStyle(EditorStyles.label);
+                    GUIStyle labelStyle = new(EditorStyles.label);
                     labelStyle.normal.textColor = new Color(242 / 255f, 109 / 255f, 28 / 255f);
                     EditorGUILayout.LabelField("Preview / プレビュー", labelStyle);
                 }
@@ -94,7 +80,7 @@ namespace IToy
 
             EditorGUILayout.PropertyField(_removeBackground);
             if (_removeBackground.intValue == (int)RemoveBackgroundOpts.Custom)
-                EditorGUILayout.PropertyField(_removeBackground, new GUIContent(" "));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("RemoveBackgroundColor"), new GUIContent(" "));
 
             EditorGUILayout.Separator();
 
@@ -151,17 +137,7 @@ namespace IToy
         {
             toy = (Toy)target;
             logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Media/logo.png");
-
-            #region Init serializable properties
             _removeBackground = serializedObject.FindProperty("RemoveBackground");
-            _flipHorizontal = serializedObject.FindProperty("Transform").FindPropertyRelative("FlipHorizontal");
-            _flipVertical = serializedObject.FindProperty("Transform").FindPropertyRelative("FlipVertical");
-            _crop = serializedObject.FindProperty("Transform").FindPropertyRelative("Crop");
-            _brightness = serializedObject.FindProperty("Correction").FindPropertyRelative("Brightness");
-            _contrast = serializedObject.FindProperty("Correction").FindPropertyRelative("Contrast");
-            _hue = serializedObject.FindProperty("Correction").FindPropertyRelative("Hue");
-            _saturation = serializedObject.FindProperty("Correction").FindPropertyRelative("Saturation");
-            #endregion
 
             #region Init shaders
             Shader backgroundShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Background.shader");
@@ -264,13 +240,13 @@ namespace IToy
 
         void SelfDestruct(Toy toy)
         {
-            string currentAssetPath = AssetDatabase.GetAssetPath(toy.Current);
-            string currentAssetDirPath = Path.GetDirectoryName(currentAssetPath);
-            AssetDatabase.DeleteAsset(currentAssetPath);
-            File.WriteAllBytes(Path.Combine(currentAssetDirPath, "cat.png"), toy.Original);
-            string toyPath = AssetDatabase.GetAssetPath(toy);
-            AssetDatabase.DeleteAsset(toyPath);
-            AssetDatabase.Refresh();
+            //string currentAssetPath = AssetDatabase.GetAssetPath(toy.Current);
+            //string currentAssetDirPath = Path.GetDirectoryName(currentAssetPath);
+            //AssetDatabase.DeleteAsset(currentAssetPath);
+            //File.WriteAllBytes(Path.Combine(currentAssetDirPath, "cat.png"), toy.Original);
+            //string toyPath = AssetDatabase.GetAssetPath(toy);
+            //AssetDatabase.DeleteAsset(toyPath);
+            //AssetDatabase.Refresh();
         }
     }
 }

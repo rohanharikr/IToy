@@ -6,17 +6,17 @@ using UnityEngine;
 
 namespace IToy
 {
-    [CustomEditor(typeof(IToy.Toy))]
+    [CustomEditor(typeof(Toy))]
     [CanEditMultipleObjects]
     public class ToyInspector : Editor
     {
         bool _isAdvancedExpanded = false;
 
-        IToy.Toy _toy;
+        Toy _toy;
         Texture2D _logo;
         Texture2D _original;
 
-        IToy.Processor _processor;
+        Processor _processor;
 
         SerializedProperty _removeBackground;
 
@@ -33,7 +33,7 @@ namespace IToy
                 {
                     EditorGUILayout.Space(20);
                     EditorGUILayout.LabelField("IToy Image Processor", EditorStyles.boldLabel);
-                    EditorGUILayout.LabelField("@rohanharikr / 1.0.3");
+                    EditorGUILayout.LabelField("@rohanharikr / 1.0.4");
                     if (EditorGUILayout.LinkButton("Source on GitHub"))
                         Application.OpenURL("https://github.com/rohanharikr/IToy");
                 }

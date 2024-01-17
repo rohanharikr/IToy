@@ -28,23 +28,14 @@ namespace IToy
         public Processor()
         {
             #region Init shaders
-            string shaderBasePath = "Assets/IToy/Editor/Shaders";
-            Shader backgroundShader = AssetDatabase.LoadAssetAtPath<Shader>(Shader.Find("IToy/Background"));
-            Shader flipHorizontalShader = AssetDatabase.LoadAssetAtPath<Shader>(Shader.Find("IToy/FlipHorizontal"));
-            Shader flipVerticalShader = AssetDatabase.LoadAssetAtPath<Shader>(Shader.Find("IToy/FlipVertical"));
-            Shader cropShader = AssetDatabase.LoadAssetAtPath<Shader>(Shader.Find("IToy/Crop"));
-            Shader brightnessShader = AssetDatabase.LoadAssetAtPath<Shader>(Shader.Find("IToy/Brightness"));
-            Shader contrastShader = AssetDatabase.LoadAssetAtPath<Shader>(Shader.Find("IToy/Contrast"));
-            Shader hueShader = AssetDatabase.LoadAssetAtPath<Shader>(Shader.Find("IToy/Hue"));
-            Shader saturationShader = AssetDatabase.LoadAssetAtPath<Shader>(Shader.Find("IToy/Saturation"));
-            _backgroundMat = new Material(backgroundShader);
-            _flipHorizontalMat = new Material(flipHorizontalShader);
-            _flipVerticalMat = new Material(flipVerticalShader);
-            _cropMat = new Material(cropShader);
-            _brightnessMat = new Material(brightnessShader);
-            _contrastMat = new Material(contrastShader);
-            _hueMat = new Material(hueShader);
-            _saturationMat = new Material(saturationShader);
+            _backgroundMat = new Material(Shader.Find("IToy/Background"));
+            _flipHorizontalMat = new Material(Shader.Find("IToy/FlipHorizontal"));
+            _flipVerticalMat = new Material(Shader.Find("IToy/FlipVertical"));
+            _cropMat = new Material(Shader.Find("IToy/Crop"));
+            _brightnessMat = new Material(Shader.Find("IToy/Brightness"));
+            _contrastMat = new Material(Shader.Find("IToy/Contrast"));
+            _hueMat = new Material(Shader.Find("IToy/Hue"));
+            _saturationMat = new Material(Shader.Find("IToy/Saturation"));
             #endregion
         }
 

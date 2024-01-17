@@ -33,7 +33,7 @@ namespace IToy
                 {
                     EditorGUILayout.Space(20);
                     EditorGUILayout.LabelField("IToy Image Processor", EditorStyles.boldLabel);
-                    EditorGUILayout.LabelField("@rohanharikr / 1.0.6");
+                    EditorGUILayout.LabelField("@rohanharikr / 1.0.7");
                     if (EditorGUILayout.LinkButton("Source on GitHub"))
                         Application.OpenURL("https://github.com/rohanharikr/IToy");
                 }
@@ -43,7 +43,7 @@ namespace IToy
 
             using (new EditorGUILayout.HorizontalScope())
             {
-                Texture2D transparencyTex = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Media/transparency-bg.jpg");
+                Texture2D transparencyTex = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Editor/Media/transparency-bg.jpg");
                 int previewSize = 208;
                 GUI.Box(new Rect(18, 115, previewSize, previewSize), transparencyTex);
                 GUI.Box(new Rect(241, 115, previewSize, previewSize), transparencyTex);
@@ -131,7 +131,7 @@ namespace IToy
         void Init()
         {
             _toy = (Toy)target;
-            _logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Media/logo.png");
+            _logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Editor/Media/logo.png");
             _removeBackground = serializedObject.FindProperty("RemoveBackground");
             _processor = new Processor();
 

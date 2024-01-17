@@ -28,14 +28,15 @@ namespace IToy
         public Processor()
         {
             #region Init shaders
-            Shader backgroundShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Background.shader");
-            Shader flipHorizontalShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Transform/FlipHorizontal.shader");
-            Shader flipVerticalShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Transform/FlipVertical.shader");
-            Shader cropShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Transform/Crop.shader");
-            Shader brightnessShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Correction/Brightness.shader");
-            Shader contrastShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Correction/Contrast.shader");
-            Shader hueShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Correction/Hue.shader");
-            Shader saturationShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/IToy/Shaders/Correction/Saturation.shader");
+            string shaderBasePath = "Assets/IToy/Editor/Shaders";
+            Shader backgroundShader = AssetDatabase.LoadAssetAtPath<Shader>(Path.Combine(shaderBasePath, "Background.shader"));
+            Shader flipHorizontalShader = AssetDatabase.LoadAssetAtPath<Shader>(Path.Combine(shaderBasePath, "Transform", "FlipHorizontal.shader"));
+            Shader flipVerticalShader = AssetDatabase.LoadAssetAtPath<Shader>(Path.Combine(shaderBasePath, "Transform", "FlipVertical.shader"));
+            Shader cropShader = AssetDatabase.LoadAssetAtPath<Shader>(Path.Combine(shaderBasePath, "Transform", "Crop.shader"));
+            Shader brightnessShader = AssetDatabase.LoadAssetAtPath<Shader>(Path.Combine(shaderBasePath, "Correction", "Brightness.shader"));
+            Shader contrastShader = AssetDatabase.LoadAssetAtPath<Shader>(Path.Combine(shaderBasePath, "Correction", "Contrast.shader"));
+            Shader hueShader = AssetDatabase.LoadAssetAtPath<Shader>(Path.Combine(shaderBasePath, "Correction", "Hue.shader"));
+            Shader saturationShader = AssetDatabase.LoadAssetAtPath<Shader>(Path.Combine(shaderBasePath, "Correction", "Saturation.shader"));
             _backgroundMat = new Material(backgroundShader);
             _flipHorizontalMat = new Material(flipHorizontalShader);
             _flipVerticalMat = new Material(flipVerticalShader);

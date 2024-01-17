@@ -1,6 +1,6 @@
 {
     "name": "com.rohanharikr.itoy",
-    "version": "2024.01.17",
+    "version": "1.0.0",
     "displayName": "IToy",
     "description": "Native Image Processor for Unity",
     "unityRelease": "17f1",

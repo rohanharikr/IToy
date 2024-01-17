@@ -106,7 +106,7 @@ namespace IToy
 
         public static Toy CreateOrUpdateToy(UnityEngine.Object selection) => SetupCreateOrUpdate(selection);
 
-        private static Toy SetupCreateOrUpdate(UnityEngine.Object selection)
+        static Toy SetupCreateOrUpdate(UnityEngine.Object selection)
         {
             string selectionPath = AssetDatabase.GetAssetPath(selection);
             string selectionName = Path.GetFileNameWithoutExtension(selectionPath);
@@ -129,6 +129,22 @@ namespace IToy
 
             EditorUtility.FocusProjectWindow();
             Selection.activeObject = toy;
+
+            return toy;
+        }
+
+        public static Toy GenerateToy(UnityEngine.Object selection)
+        {
+            string selectionPath = AssetDatabase.GetAssetPath(selection);
+            string selectionName = Path.GetFileNameWithoutExtension(selectionPath);
+            string selectionDirPath = Path.GetDirectoryName(selectionPath);
+            string toyName = selectionName + ".asset";
+
+            Toy toy = ScriptableObject.CreateInstance<Toy>();
+            Utility.ReadWriteAccess(selectionPath, true); //Set read/write permission for texture to be read via script
+            toy.Original = ((Texture2D)selection).EncodeToPNG();
+            Utility.ReadWriteAccess(selectionPath, false); //OP done - revert permissions
+            toy.Current = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(selection));
 
             return toy;
         }

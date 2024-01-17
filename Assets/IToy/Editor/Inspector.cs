@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿using System;
+using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 namespace IToy
@@ -83,17 +85,26 @@ namespace IToy
                 using (new GUILayout.VerticalScope())
                 {
                     EditorGUILayout.Separator();
+                    
                     EditorGUILayout.LabelField("Reset the image to it's former glory");
-                    GUILayout.Button("Reset / リセット", GUILayout.ExpandWidth(false));
+                    if(GUILayout.Button("Reset / リセット", GUILayout.ExpandWidth(false)))
+                        ResetChanges();
+
                     EditorGUILayout.Separator();
+
                     EditorGUILayout.LabelField("Keep the image but bid the toy farewell");
-                    GUILayout.Button("Send off IToy / 別れ", GUILayout.ExpandWidth(false));
+                    
+                    if (GUILayout.Button("Send off IToy / 別れ", GUILayout.ExpandWidth(false)))
+                        DeleteToy();
+
                     EditorGUILayout.Separator();
+
                     EditorGUILayout.LabelField("Reset the image and remove the toy");
                     if (GUILayout.Button("Self-Destruct / 自己破壊", GUILayout.ExpandWidth(false)))
                     {
-                        
-                    };
+                        ResetChanges();
+                        DeleteToy();
+                    }
                 }
             }
             EditorGUILayout.EndFoldoutHeaderGroup();
@@ -106,9 +117,7 @@ namespace IToy
             EditorGUILayout.Space(20);
 
             if (serializedObject.ApplyModifiedProperties())
-            {
                 DrawPreview();
-            }
         }
 
         void Update()
@@ -169,6 +178,33 @@ namespace IToy
             int saturationLevel = serializedObject.FindProperty("Correction").FindPropertyRelative("Saturation").intValue;
             if (saturationLevel != 0)
                 _processor.Brightness(saturationLevel);
+        }
+
+        void ResetChanges()
+        {
+            //Reset image
+            File.WriteAllBytes(AssetDatabase.GUIDToAssetPath(_toy.Current), _toy.Original);
+
+            //It is easier to replace toy with new than setting all values to default in exisitng toy
+            string currentAssetPath = AssetDatabase.GUIDToAssetPath(_toy.Current);
+            UnityEngine.Object currentAsset = AssetDatabase.LoadAssetAtPath<Texture>(currentAssetPath);
+            Toy newToy = ToyUtility.GenerateToy(currentAsset);
+            newToy.name = currentAssetPath; //Name of asset name has to be same for CopySerialized to work
+            EditorUtility.CopySerialized(newToy, _toy);
+
+            AssetDatabase.Refresh();
+        }
+
+        void DeleteToy()
+        {
+            //Remove focus inspector so Unity does not throw errors when deleting toy
+            UnityEngine.Object assetToFocus = AssetDatabase.LoadAssetAtPath<Texture2D>(AssetDatabase.GUIDToAssetPath(_toy.Current));
+            EditorUtility.FocusProjectWindow();
+            Selection.activeObject = assetToFocus;
+            
+            FileUtil.DeleteFileOrDirectory(AssetDatabase.GetAssetPath(_toy));
+
+            AssetDatabase.Refresh();
         }
     }
 }

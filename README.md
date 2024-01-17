@@ -5,10 +5,13 @@
 <h3 align="center">Your friendly neighborhood non-destructive image processor for Unity!</h3>
 <br/>
 
-https://github.com/rohanharikr/RockstarGamesLauncher/assets/12775813/70d57f4a-8853-48ce-a6dc-18a634379174
+https://github.com/rohanharikr/IToy/assets/12775813/cb745359-13a3-4a3b-9c24-acd5a0e8fd0a
+
+<img align="right" src="./README/inspector.png" width="30%"/>
 
 > [!Note]
 > This repo has been set up following [Unity's recommended](https://docs.unity3d.com/Manual/cus-layout.html) custom package layout.
+
 
 ## Features 
 
@@ -17,10 +20,6 @@ https://github.com/rohanharikr/RockstarGamesLauncher/assets/12775813/70d57f4a-88
 - Crop
 - Color correction (Brightness, Contrast, Hue, Saturation)
 - Non-destructive (Revert to the original image anytime!)
-
-## Screenshots
-<img src="./README/HomeView.png" width="50%"/><img src="./README/Search.png" width="50%"/>
-<img src="./README/PlayView.png" width="50%"/><img src="./README/DetailModal.png" width="50%"/>
 
 ## Installing
 
@@ -47,6 +46,3 @@ https://github.com/rohanharikr/RockstarGamesLauncher/assets/12775813/70d57f4a-88
 1. Right-click any image from the Project Window > IToy > [Select any quick setting you want]
 2. Play with the toy file in the inspector
 3. Click on "Update" button to write changes to the image file
-
-
-

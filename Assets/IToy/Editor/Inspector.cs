@@ -53,7 +53,7 @@ namespace IToy
                 }
                 using (new EditorGUILayout.VerticalScope())
                 {
-                    GUILayout.Label(_processor.texture, GUILayout.Width(previewSize), GUILayout.Height(previewSize));
+                    GUILayout.Label(_processor.Texture, GUILayout.Width(previewSize), GUILayout.Height(previewSize));
 
                     GUIStyle labelStyle = new(EditorStyles.label);
                     labelStyle.normal.textColor = new Color(242 / 255f, 109 / 255f, 28 / 255f);
@@ -137,23 +137,15 @@ namespace IToy
 
         void DrawPreview()
         {
-            _processor.texture = _original;
+            _processor.Texture = _original;
 
             RectInt cropValues = serializedObject.FindProperty("Transform").FindPropertyRelative("Crop").rectIntValue;
             if (cropValues.x != 0 || cropValues.y != 0 || cropValues.width != 0 || cropValues.height != 0)
                 _processor.Crop(cropValues);
 
-            int removeBackground = serializedObject.FindProperty("RemoveBackground").enumValueIndex;
             if (_toy.RemoveBackground != (int)RemoveBackgroundOpts.None)
             {
-                Color colorToRemove;
-                if(removeBackground == (int)RemoveBackgroundOpts.White)
-                    colorToRemove = Color.white;
-                else if(removeBackground == (int)RemoveBackgroundOpts.Black)
-                    colorToRemove = Color.black;
-                else
-                    colorToRemove = serializedObject.FindProperty("RemoveBackgroundColor").colorValue;
-
+                Color colorToRemove = ToyUtility.BackgroundEnumToColor(_toy.RemoveBackground, serializedObject.FindProperty("RemoveBackgroundColor").colorValue);
                 _processor.RemoveBackground(colorToRemove);
             }
 

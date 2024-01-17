@@ -6,7 +6,7 @@ using UnityEngine;
 public class Processor
 {
     private Texture2D _texture;
-    public Texture2D texture
+    public Texture2D Texture
     {
         get { return _texture; }
         set { _texture = value; }  

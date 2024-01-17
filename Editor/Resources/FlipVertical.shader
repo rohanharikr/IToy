@@ -1,4 +1,4 @@
-Shader "IToy/FlipHorizontal"
+Shader "IToy/FlipVertical"
 {
     Properties
     {

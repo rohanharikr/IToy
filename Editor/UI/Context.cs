@@ -9,6 +9,7 @@ namespace IToy
         [MenuItem("Assets/IToy/Remove black background", true)]
         [MenuItem("Assets/IToy/Flip horizontal", true)]
         [MenuItem("Assets/IToy/Flip vertical", true)]
+        [MenuItem("Assets/IToy/Grayscale", true)]
         [MenuItem("Assets/IToy/Create toy", true)]
         static bool IsSupportedFileType() => Utility.IsSupportedFileType(Selection.activeObject);
 

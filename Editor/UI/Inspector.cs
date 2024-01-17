@@ -13,7 +13,6 @@ namespace IToy
         bool _isAdvancedExpanded = false;
 
         Toy _toy;
-        Texture2D _logo;
         Texture2D _original;
 
         Processor _processor;
@@ -28,7 +27,8 @@ namespace IToy
 
             using (new EditorGUILayout.HorizontalScope())
             {
-                GUILayout.Label(_logo, GUILayout.Width(100), GUILayout.Height(100));
+                Texture2D logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/com.rohanharikr.itoy/Editor/Media/logo.png");
+                GUILayout.Label(logo, GUILayout.Width(100), GUILayout.Height(100));
                 using (new EditorGUILayout.VerticalScope(GUILayout.ExpandHeight(true)))
                 {
                     EditorGUILayout.Space(20);
@@ -43,7 +43,7 @@ namespace IToy
 
             using (new EditorGUILayout.HorizontalScope())
             {
-                Texture2D transparencyTex = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Editor/Media/transparency-bg.jpg");
+                Texture2D transparencyTex = AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/com.rohanharikr.itoy/Editor/Media/transparency-bg.png");
                 int previewSize = 208;
                 GUI.Box(new Rect(18, 115, previewSize, previewSize), transparencyTex);
                 GUI.Box(new Rect(241, 115, previewSize, previewSize), transparencyTex);
@@ -131,7 +131,6 @@ namespace IToy
         void Init()
         {
             _toy = (Toy)target;
-            _logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Editor/Media/logo.png");
             _removeBackground = serializedObject.FindProperty("RemoveBackground");
             _processor = new Processor();
 

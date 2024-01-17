@@ -80,7 +80,7 @@ namespace IToy
 
             using (new EditorGUILayout.HorizontalScope())
             {
-                Texture2D transparencyTex = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Data/transparency-bg.jpg");
+                Texture2D transparencyTex = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Media/transparency-bg.jpg");
                 int previewSize = 208;
                 GUI.Box(new Rect(18, 115, previewSize, previewSize), transparencyTex);
                 GUI.Box(new Rect(241, 115, previewSize, previewSize), transparencyTex);
@@ -203,7 +203,7 @@ namespace IToy
         void Init()
         {
             toy = (Toy)target;
-            logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Data/logo.png");
+            logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/IToy/Media/logo.png");
 
             #region Init serializable properties
             _removeBackground = serializedObject.FindProperty("RemoveBackground");

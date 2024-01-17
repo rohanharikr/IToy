@@ -132,6 +132,8 @@ namespace IToy
             if (GUILayout.Button("Update / アップデート", GUILayout.ExpandWidth(false)))
                 Update();
               
+            EditorGUILayout.Space(20);
+
             if (serializedObject.ApplyModifiedProperties())
             {
                 DrawPreview();

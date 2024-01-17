@@ -3,7 +3,7 @@ Shader "IToy/Brightness"
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
-		_Brightness ("Brightness", Range(-100, 100)) = 0
+		_BrightnessVal ("Brightness", Range(-100, 100)) = 0
 	}
 
 	SubShader
@@ -18,7 +18,7 @@ Shader "IToy/Brightness"
 			#include "UnityCG.cginc"
 
 			sampler2D _MainTex;
-			float _Brightness;
+			float _BrightnessVal;
 
 			struct appdata
 			{
@@ -45,7 +45,7 @@ Shader "IToy/Brightness"
 				fixed4 col = tex2D(_MainTex, i.uv);
 
 				// Adjust brightness
-				col.rgb += _Brightness / 100.0;
+				col.rgb += _BrightnessVal / 100.0;
 
 				return col;
 			}

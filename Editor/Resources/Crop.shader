@@ -3,10 +3,10 @@ Shader "IToy/Crop"
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
-		_Top ("Remove Top", Int) = 0
-		_Bottom ("Remove Bottom", Int) = 0
-		_Left ("Remove Left", Int) = 0
-		_Right ("Remove Right", Int) = 0
+		_CropTop ("Remove Top", Int) = 0
+		_CropBottom ("Remove Bottom", Int) = 0
+		_CropLeft ("Remove Left", Int) = 0
+		_CropRight ("Remove Right", Int) = 0
 	}
 
 	SubShader
@@ -21,10 +21,10 @@ Shader "IToy/Crop"
 			#include "UnityCG.cginc"
 
 			sampler2D _MainTex;
-			int _Top;
-			int _Bottom;
-			int _Left;
-			int _Right;
+			int _CropTop;
+			int _CropBottom;
+			int _CropLeft;
+			int _CropRight;
 
 			struct appdata
 			{
@@ -49,10 +49,10 @@ Shader "IToy/Crop"
 			fixed4 pixel_shader(v2f i) : COLOR
 			{
 				// Remove pixels from the top, bottom, left, and right sides based on the properties
-				if (i.uv.y < (_Bottom / _ScreenParams.y) ||
-				    i.uv.y > (1.0 - (_Top / _ScreenParams.y)) ||
-				    i.uv.x < (_Left / _ScreenParams.x) ||
-				    i.uv.x > (1.0 - (_Right / _ScreenParams.x)))
+				if (i.uv.y < (_CropBottom / _ScreenParams.y) ||
+				    i.uv.y > (1.0 - (_CropTop / _ScreenParams.y)) ||
+				    i.uv.x < (_CropLeft / _ScreenParams.x) ||
+				    i.uv.x > (1.0 - (_CropRight / _ScreenParams.x)))
 				{
 					discard;
 				}

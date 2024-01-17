@@ -47,10 +47,10 @@ namespace IToy
 
         public void Crop(RectInt crop)
         {
-            _cropMat.SetInteger("_Top", crop.x);
-            _cropMat.SetInteger("_Right", crop.y);
-            _cropMat.SetInteger("_Bottom", crop.width);
-            _cropMat.SetInteger("_Left", crop.height);
+            _cropMat.SetInteger("_CropTop", crop.x);
+            _cropMat.SetInteger("_CropRight", crop.y);
+            _cropMat.SetInteger("_CropBottom", crop.width);
+            _cropMat.SetInteger("_CropLeft", crop.height);
             _texture = Utility.ApplyShader(_texture, _cropMat);
             _cropMat.RevertAllPropertyOverrides();
         }

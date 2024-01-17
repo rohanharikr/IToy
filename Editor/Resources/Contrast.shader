@@ -3,7 +3,7 @@ Shader "IToy/Contrast"
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
-		_Contrast ("Contrast", Range(-100, 100)) = 0
+		_Contrast ("ContrastVal", Range(-100, 100)) = 0
 	}
 
 	SubShader
@@ -18,7 +18,7 @@ Shader "IToy/Contrast"
 			#include "UnityCG.cginc"
 
 			sampler2D _MainTex;
-			float _Contrast;
+			float _ContrastVal;
 
 			struct appdata
 			{
@@ -45,7 +45,7 @@ Shader "IToy/Contrast"
 				fixed4 col = tex2D(_MainTex, i.uv);
 
 				// Adjust contrast
-				col.rgb = (col.rgb - 0.5) * (1.0 + _Contrast / 100.0) + 0.5;
+				col.rgb = (col.rgb - 0.5) * (1.0 + _ContrastVal / 100.0) + 0.5;
 
 				return col;
 			}

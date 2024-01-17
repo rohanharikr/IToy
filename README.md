@@ -2,7 +2,7 @@
 <img src="./README/logo.png" alt="IToy" align="center" width="250px" />
 </div>
 <br/>
-<h3 align="center">Your friendly neighborhood non-destructive image processor for Unity!</h3>
+<h3 align="center">Your friendly neighbourhood non-destructive image processor for Unity!</h3>
 <br/>
 
 https://github.com/rohanharikr/IToy/assets/12775813/cb745359-13a3-4a3b-9c24-acd5a0e8fd0a

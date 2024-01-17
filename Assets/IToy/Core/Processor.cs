@@ -13,14 +13,14 @@ public class Processor
     }
 
     #region Materials
-    Material _backgroundMat;
-    Material _flipHorizontalMat;
-    Material _flipVerticalMat;
-    Material _cropMat;
-    Material _brightnessMat;
-    Material _contrastMat;
-    Material _hueMat;
-    Material _saturationMat;
+    readonly Material _backgroundMat;
+    readonly Material _flipHorizontalMat;
+    readonly Material _flipVerticalMat;
+    readonly Material _cropMat;
+    readonly Material _brightnessMat;
+    readonly Material _contrastMat;
+    readonly Material _hueMat;
+    readonly Material _saturationMat;
     #endregion
 
     public Processor()

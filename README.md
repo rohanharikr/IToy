@@ -1,3 +1,6 @@
+> [!Note]
+> This repo has been set up following [Unity's recommended](https://docs.unity3d.com/Manual/cus-layout.html) custom package layout.
+
 <div align="center">
 <img src="./README/logo.png" alt="IToy" align="center" width="250px" />
 </div>
@@ -8,10 +11,6 @@
 https://github.com/rohanharikr/IToy/assets/12775813/cb745359-13a3-4a3b-9c24-acd5a0e8fd0a
 
 <img align="right" src="./README/inspector.png" width="30%"/>
-
-> [!Note]
-> This repo has been set up following [Unity's recommended](https://docs.unity3d.com/Manual/cus-layout.html) custom package layout.
-
 
 ## Features 
 

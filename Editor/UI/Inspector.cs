@@ -1,10 +1,9 @@
-﻿using IToy;
-using System;
+﻿using IToy.Core;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace IToy
+namespace IToy.UI
 {
     [CustomEditor(typeof(Toy))]
     [CanEditMultipleObjects]

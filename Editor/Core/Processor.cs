@@ -2,7 +2,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace IToy 
+namespace IToy.Core
 {
     public class Processor
     {

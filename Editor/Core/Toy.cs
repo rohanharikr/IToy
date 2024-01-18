@@ -1,10 +1,9 @@
-﻿using IToy;
-using System;
+﻿using System;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace IToy
+namespace IToy.Core
 {
     public class Toy : ScriptableObject
     {

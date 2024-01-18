@@ -1,7 +1,7 @@
-﻿using IToy;
+﻿using IToy.Core;
 using UnityEditor;
 
-namespace IToy
+namespace IToy.UI
 {
     public class Context
     {

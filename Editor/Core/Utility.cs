@@ -1,8 +1,7 @@
-﻿using IToy;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
-namespace IToy
+namespace IToy.Core
 {
     public class Utility
     {

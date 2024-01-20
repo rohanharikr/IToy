@@ -15,27 +15,27 @@ namespace IToy.UI
 
         [MenuItem("Assets/IToy/Remove white background", secondaryPriority = 0)]
         static void RemoveWhiteBackground() => 
-            ToyUtility.CreateOrUpdateToy(Selection.activeObject, RemoveBackgroundOpts.White);
+            Utility.CreateOrUpdateToy(Selection.activeObject, RemoveBackgroundOpts.White);
 
         [MenuItem("Assets/IToy/Remove black background", secondaryPriority = 1)]
         static void RemoveBlackBackground() =>
-            ToyUtility.CreateOrUpdateToy(Selection.activeObject, RemoveBackgroundOpts.White);
+            Utility.CreateOrUpdateToy(Selection.activeObject, RemoveBackgroundOpts.Black);
 
         [MenuItem("Assets/IToy/Flip horizontal", secondaryPriority = 2)]
         static void FlipHorizontal() =>
-            ToyUtility.CreateOrUpdateToy(Selection.activeObject, "FlipHorizontal", true);
+            Utility.CreateOrUpdateToy(Selection.activeObject, "FlipHorizontal", true);
 
         [MenuItem("Assets/IToy/Flip vertical", secondaryPriority = 3)]
         static void FlipVertical() =>
-            ToyUtility.CreateOrUpdateToy(Selection.activeObject, "FlipVertical", true);
+            Utility.CreateOrUpdateToy(Selection.activeObject, "FlipVertical", true);
 
         [MenuItem("Assets/IToy/Grayscale", secondaryPriority = 4)]
         static void Grayscale() =>
-            ToyUtility.CreateOrUpdateToy(Selection.activeObject, "Grayscale", 0);
+            Utility.CreateOrUpdateToy(Selection.activeObject, "Grayscale", -100);
 
         [MenuItem("Assets/IToy/Create toy", secondaryPriority = 5)]
         static void CreateToy() =>
-            ToyUtility.CreateOrUpdateToy(Selection.activeObject);
+            Utility.CreateOrUpdateToy(Selection.activeObject);
     }
 }
 

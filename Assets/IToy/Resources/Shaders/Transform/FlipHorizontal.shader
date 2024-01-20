@@ -1,4 +1,4 @@
-Shader "IToy/FlipVertical"
+Shader "IToy/Transform/FlipHorizontal"
 {
     Properties
     {
@@ -39,7 +39,7 @@ Shader "IToy/FlipVertical"
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = float2(1.0 - v.uv.x, 1.0 - v.uv.y);
+                o.uv = float2(1.0 - v.uv.x, v.uv.y);
                 UNITY_TRANSFER_FOG(o,o.vertex);
                 return o;
             }

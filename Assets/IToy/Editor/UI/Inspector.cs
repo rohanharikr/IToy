@@ -9,13 +9,10 @@ namespace IToy.UI
     [CanEditMultipleObjects]
     public class ToyInspector : Editor
     {
-        bool _isAdvancedExpanded = false;
-
         Toy _toy;
         Texture2D _original;
-
         Processor _processor;
-
+        bool _isAdvancedExpanded = false;
         SerializedProperty _removeBackground;
 
         private void OnEnable() => Init();
@@ -26,7 +23,7 @@ namespace IToy.UI
 
             using (new EditorGUILayout.HorizontalScope())
             {
-                Texture2D logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/com.rohanharikr.itoy/Resources/Media/logo.png");
+                Texture2D logo = AssetDatabase.LoadAssetAtPath<Texture2D>($"Packages/{IToy.Core.Utility.PackageName}/Assets/IToy/Resources/Media/logo.png");
                 GUILayout.Label(logo, GUILayout.Width(100), GUILayout.Height(100));
                 using (new EditorGUILayout.VerticalScope(GUILayout.ExpandHeight(true)))
                 {
@@ -42,7 +39,7 @@ namespace IToy.UI
 
             using (new EditorGUILayout.HorizontalScope())
             {
-                Texture2D transparencyTex = AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/com.rohanharikr.itoy/Resources/Media/transparency.png");
+                Texture2D transparencyTex = AssetDatabase.LoadAssetAtPath<Texture2D>($"Packages/{IToy.Core.Utility.PackageName}/Assets/IToy/Resources/Media/transparency.png");
                 int previewSize = 208;
                 GUI.Box(new Rect(18, 115, previewSize, previewSize), transparencyTex);
                 GUI.Box(new Rect(241, 115, previewSize, previewSize), transparencyTex);
@@ -152,7 +149,7 @@ namespace IToy.UI
 
             if (_toy.RemoveBackground != (int)RemoveBackgroundOpts.None)
             {
-                Color colorToRemove = ToyUtility.BackgroundEnumToColor(_toy.RemoveBackground, serializedObject.FindProperty("RemoveBackgroundColor").colorValue);
+                Color colorToRemove = Utility.BackgroundEnumToColor(_toy.RemoveBackground, serializedObject.FindProperty("RemoveBackgroundColor").colorValue);
                 _processor.RemoveBackground(colorToRemove);
             }
 
@@ -188,7 +185,7 @@ namespace IToy.UI
             //It is easier to replace toy with new than setting all values to default in exisitng toy
             string currentAssetPath = AssetDatabase.GUIDToAssetPath(_toy.Current);
             UnityEngine.Object currentAsset = AssetDatabase.LoadAssetAtPath<Texture>(currentAssetPath);
-            Toy newToy = ToyUtility.GenerateToy(currentAsset);
+            Toy newToy = Utility.GenerateToy(currentAsset);
             newToy.name = Path.GetFileNameWithoutExtension(currentAssetPath); //Name of asset name has to be same for CopySerialized to work
             EditorUtility.CopySerialized(newToy, _toy);
 

@@ -1,4 +1,4 @@
-Shader "IToy/Hue"
+Shader "IToy/Correction/Hue"
 {
 	Properties
 	{

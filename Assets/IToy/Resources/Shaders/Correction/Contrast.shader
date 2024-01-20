@@ -1,9 +1,9 @@
-Shader "IToy/Saturation"
+Shader "IToy/Correction/Contrast"
 {
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
-		_Correction ("Saturation", Range(-100, 100)) = 0
+		_Correction ("ContrastVal", Range(-100, 100)) = 0
 	}
 
 	SubShader
@@ -43,8 +43,10 @@ Shader "IToy/Saturation"
 			fixed4 pixel_shader(v2f i) : COLOR
 			{
 				fixed4 col = tex2D(_MainTex, i.uv);
-				float gray = dot(col.rgb, float3(0.3, 0.59, 0.11));
-				col.rgb = lerp(gray, col.rgb, (_Correction + 100.0) / 100.0);
+
+				// Adjust contrast
+				col.rgb = (col.rgb - 0.5) * (1.0 + _Correction / 100.0) + 0.5;
+
 				return col;
 			}
 

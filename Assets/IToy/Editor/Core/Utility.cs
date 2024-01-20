@@ -1,62 +1,66 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using UnityEditor;
 using UnityEngine;
 
 namespace IToy.Core
 {
-    public class Toy : ScriptableObject
+    public class Utility
     {
-        //Store original image in SO since we do not want to show in inspector
-        public byte[] Original;
+        public static string PackageName = "com.rohanharikr.itoy"; 
 
-        public string Current;
+        public static void ReadWriteAccess(string assetPath, bool set = true)
+        {
+            TextureImporter ti = (TextureImporter)AssetImporter.GetAtPath(assetPath);
+            ti.isReadable = set;
 
-        public RemoveBackgroundOpts RemoveBackground;
+            ti.SaveAndReimport();
+        }
 
-        public Transform Transform;
+        public static Texture2D ApplyShader(Texture2D inputTexture, Material shaderMaterial)
+        {
+            Texture2D res = new(inputTexture.width, inputTexture.height);
+            RenderTexture rt = RenderTexture.GetTemporary(inputTexture.width, inputTexture.height);
+            Graphics.Blit(inputTexture, rt, shaderMaterial);
+            RenderTexture.active = rt;
+            res.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+            res.Apply();
+            return res;
+        }
 
-        public Correction Correction;
+        public static bool IsSupportedFileType(Object selection)
+        {
+            return selection != null && selection is Texture2D;
+        }
 
-        public Color RemoveBackgroundColor;
-    }
+        public static Color BackgroundEnumToColor(RemoveBackgroundOpts removeBackgroundEnum, Color? customColor)
+        {
+            if (removeBackgroundEnum == RemoveBackgroundOpts.White)
+                return Color.white;
+            else if (removeBackgroundEnum == RemoveBackgroundOpts.Black)
+                return Color.black;
+            else if (customColor != null)
+                return (Color)customColor;
 
-    public enum RemoveBackgroundOpts
-    {
-        None,
-        White,
-        Black,
-        Custom,
-    }
+            return new Color(0, 0, 0, 0);
+        }
 
-    [Serializable]
-    public class Transform
-    {
-        public bool FlipHorizontal = false;
+        public static Toy CreateOrUpdateToy(UnityEngine.Object selection) => SetupCreateOrUpdate(selection);
+        public static Toy CreateOrUpdateToy(UnityEngine.Object selection, RemoveBackgroundOpts removeBackground)
+        {
+            Processor processor = new()
+            {
+                Texture = (Texture2D)selection
+            };
 
-        public bool FlipVertical = false;
+            Toy toy = SetupCreateOrUpdate(selection);
+            toy.RemoveBackground = removeBackground;
 
-        public RectInt Crop;
-    }
+            Color colorToRemove = Utility.BackgroundEnumToColor(removeBackground, null);
+            processor.RemoveBackground(colorToRemove);
+            processor.WriteToDisk(AssetDatabase.GetAssetPath(selection));
 
-    [Serializable]
-    public class Correction
-    {
-        [Range(-100, 100)]
-        public int Brightness = 0;
-
-        [Range(-100, 100)]
-        public int Contrast = 0;
-
-        [Range(-100, 100)]
-        public int Hue = 0;
-
-        [Range(-100, 100)]
-        public int Saturation = 0;
-    }
-
-    public class ToyUtility
-    {
+            return toy;
+        }
         public static Toy CreateOrUpdateToy(UnityEngine.Object selection, string key, object value)
         {
             Processor processor = new()
@@ -78,7 +82,7 @@ namespace IToy.Core
                     break;
                 case "Grayscale":
                     toy.Correction.Saturation = (int)value;
-                    processor.Saturation(-100);
+                    processor.Saturation((int)value);
                     break;
             }
 
@@ -87,26 +91,7 @@ namespace IToy.Core
             return toy;
         }
 
-        public static Toy CreateOrUpdateToy(UnityEngine.Object selection, RemoveBackgroundOpts removeBackground)
-        {
-            Processor processor = new()
-            {
-                Texture = (Texture2D)selection
-            };
-
-            Toy toy = SetupCreateOrUpdate(selection);
-            toy.RemoveBackground = removeBackground;
-
-            Color colorToRemove = BackgroundEnumToColor(removeBackground, null);
-            processor.RemoveBackground(colorToRemove);
-            processor.WriteToDisk(AssetDatabase.GetAssetPath(selection));
-
-            return toy;
-        }
-
-        public static Toy CreateOrUpdateToy(UnityEngine.Object selection) => SetupCreateOrUpdate(selection);
-
-        static Toy SetupCreateOrUpdate(UnityEngine.Object selection)
+        private static Toy SetupCreateOrUpdate(UnityEngine.Object selection)
         {
             string selectionPath = AssetDatabase.GetAssetPath(selection);
             string selectionName = Path.GetFileNameWithoutExtension(selectionPath);
@@ -116,7 +101,7 @@ namespace IToy.Core
 
             Toy toy = AssetDatabase.LoadAssetAtPath<Toy>(toyAssetPath);
 
-            if (toy == null)
+            if (toy == null) //Toy does not exist, create one
             {
                 toy = ScriptableObject.CreateInstance<Toy>();
                 Utility.ReadWriteAccess(selectionPath, true); //Set read/write permission for texture to be read va script
@@ -144,18 +129,6 @@ namespace IToy.Core
             toy.Current = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(selection));
 
             return toy;
-        }
-
-        public static Color BackgroundEnumToColor(RemoveBackgroundOpts removeBackgroundEnum, Color? customColor)
-        {
-            if (removeBackgroundEnum == RemoveBackgroundOpts.White)
-                return Color.white;
-            else if (removeBackgroundEnum == RemoveBackgroundOpts.Black)
-                return Color.black;
-            else if (customColor != null)
-                return (Color)customColor;
-
-            return new Color(0, 0, 0, 0);
         }
     }
 }

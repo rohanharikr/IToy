@@ -43,3 +43,7 @@ https://github.com/rohanharikr/IToy/assets/12775813/cb745359-13a3-4a3b-9c24-acd5
 1. Right-click any image from the Project Window > IToy > [Select any quick setting you want]
 2. Play with the toy file in the inspector
 3. Click on "Update" button to write changes to the image file
+
+---
+
+Thanks to Reddit user [zaraishu](https://www.reddit.com/user/zaraishu/) for help with the Japanese transilerations.

@@ -8,9 +8,10 @@ namespace IToy.Core
     public class Toy : ScriptableObject
     {
         //Store original image in SO since we do not want to show in inspector
+        [HideInInspector]
         public byte[] Original;
 
-        public string Current;
+        public string Current; //Asset GUID
 
         public RemoveBackgroundOpts RemoveBackground;
 

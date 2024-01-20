@@ -1,6 +1,3 @@
-> [!Note]
-> This repo has been set up following [Unity's recommended](https://docs.unity3d.com/Manual/cus-layout.html) custom package layout.
-
 <div align="center">
 <img src="./README/logo.png" alt="IToy" align="center" width="250px" />
 </div>

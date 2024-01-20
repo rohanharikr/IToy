@@ -26,7 +26,7 @@ namespace IToy.UI
 
             using (new EditorGUILayout.HorizontalScope())
             {
-                Texture2D logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/com.rohanharikr.itoy/Editor/Media/logo.png");
+                Texture2D logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/com.rohanharikr.itoy/Resources/Media/logo.png");
                 GUILayout.Label(logo, GUILayout.Width(100), GUILayout.Height(100));
                 using (new EditorGUILayout.VerticalScope(GUILayout.ExpandHeight(true)))
                 {
@@ -42,7 +42,7 @@ namespace IToy.UI
 
             using (new EditorGUILayout.HorizontalScope())
             {
-                Texture2D transparencyTex = AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/com.rohanharikr.itoy/Editor/Media/transparency-bg.jpg");
+                Texture2D transparencyTex = AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/com.rohanharikr.itoy/Resources/Media/transparency.png");
                 int previewSize = 208;
                 GUI.Box(new Rect(18, 115, previewSize, previewSize), transparencyTex);
                 GUI.Box(new Rect(241, 115, previewSize, previewSize), transparencyTex);

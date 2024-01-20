@@ -13,8 +13,9 @@ https://github.com/rohanharikr/IToy/assets/12775813/cb745359-13a3-4a3b-9c24-acd5
 
 - Remove background color
 - Flip horizontal/vertical
-- Crop
+- Crop (All sides)
 - Color correction (Brightness, Contrast, Hue, Saturation)
+- Non-additive (Changes are always based on the original image)
 - Non-destructive (Revert to the original image anytime!)
 
 ## Installing

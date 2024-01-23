@@ -31,7 +31,7 @@ namespace IToy.Core
     }
 
     [Serializable]
-    public class Transform
+    public struct Transform
     {
         public bool FlipHorizontal = false;
 
@@ -41,7 +41,7 @@ namespace IToy.Core
     }
 
     [Serializable]
-    public class Correction
+    public struct Correction
     {
         [Range(-100, 100)]
         public int Brightness = 0;

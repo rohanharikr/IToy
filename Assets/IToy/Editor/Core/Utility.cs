@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace IToy.Core
 {
-    public class Utility
+    public static class Utility
     {
-        public static string PackageName = "com.rohanharikr.itoy"; 
+        public static string PackageName = "com.rohanharikr.itoy";
 
         public static void ReadWriteAccess(string assetPath, bool set = true)
         {

@@ -6,7 +6,7 @@ namespace IToy.Core
 {
     public class Processor
     {
-        public Texture2D Texture;
+        public Texture2D Texture { get; set; }
 
         #region Materials
         readonly Material _backgroundMat;
